@@ -6,6 +6,7 @@ use Soundasleep\Html2Text;
 use RCS\WP\PluginLogger;
 use RCS\WP\BgProcess\RcsWpBgTask;
 use RCS\WP\BgProcess\RcsWpBgProcess;
+use RCS\WP\WpMail\WpMailWrapper;
 use WSCL\Learn\WsclLearnPluginOptions;
 
 class CheckCourseExpirationTask implements RcsWpBgTask
@@ -148,42 +149,13 @@ class CheckCourseExpirationTask implements RcsWpBgTask
 
         $htmlBody = "<html><body>{$body}</body></html>";
 
-        self::emailMsg(
-            self::formatEmailAddress($options->getMsgFromAddress(), $options->getMsgFromName()),
-            self::formatEmailAddress($wpUser->user_email, $wpUser->first_name . ' ' . $wpUser->last_name),
-            self::formatEmailAddress($options->getMsgFromAddress(), $options->getMsgFromName()),
-            $subject,
-            Html2Text::convert($htmlBody)
-            );
-    }
-
-    private static function formatEmailAddress(string $email, string $name): string
-    {
-        return sprintf('<%s> %s', $email, $name);
-    }
-
-    private static function emailMsg(
-        string $from,
-        string $to,
-        string $bcc,
-        string $subject,
-        string $msg): void
-    {
-        if (function_exists('\wp_mail')) {
-            $mailFunction = '\wp_mail';
-        } else {
-            $mailFunction = '\mail';
-        }
-
-        $mailFunction(
-            $to,
-            $subject,
-            $msg,
-            [
-                'From' => $from,
-                'Bcc' => $bcc,
-                'Content-Type' => 'text/html; charset=UTF-8'
-            ]
-            );
+        (new WpMailWrapper())
+            ->setFrom($options->getMsgFromAddress(), $options->getMsgFromName())
+            ->addTo($wpUser->user_email, $wpUser->first_name . ' ' . $wpUser->last_name)
+            ->setSubject($subject)
+            ->addBcc($options->getMsgFromAddress(), $options->getMsgFromName())
+            ->setHtmlBody($htmlBody)
+            ->setPlainBody(Html2Text::convert($htmlBody))
+            ->sendMessage();
     }
 }

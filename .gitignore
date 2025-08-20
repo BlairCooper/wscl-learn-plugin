@@ -3,3 +3,8 @@
 report
 vendor
 node_modules
+
+# RCS folders and/or files to ignore
+src/RCS/WP/Cache
+src/RCS/WP/Csv
+src/RCS/WP/Json

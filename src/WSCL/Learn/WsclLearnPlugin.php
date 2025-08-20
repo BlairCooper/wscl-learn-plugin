@@ -43,5 +43,19 @@ class WsclLearnPlugin
         WsclLearnAdminSettings::init($pluginInfo);
 
         InsertJotFormShortCode::init($pluginInfo);
+
+        add_filter(
+            'wp_mail_from',
+            function (string $fromEmail) {
+                return WsclLearnPluginOptions::init()->getSiteEmailAddress();
+            }
+        );
+
+        add_filter(
+            'wp_mail_from_name',
+            function (string $fromName) {
+                return WsclLearnPluginOptions::init()->getSiteEmailName();
+            }
+        );
     }
 }

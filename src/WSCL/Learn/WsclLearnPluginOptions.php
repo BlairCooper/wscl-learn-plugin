@@ -8,6 +8,9 @@ class WsclLearnPluginOptions extends PluginOptions
 {
     public const OPTION_NAME = 'wscl_learn_site_options';
 
+    public const SITE_EMAIL_NAME_KEY = 'siteEmailName';
+    public const SITE_EMAIL_ADDRESS_KEY = 'siteEmailAddress';
+
     public const MSG_FROM_NAME_ID = 'msgFromNameId';
     public const MSG_FROM_ADDRESS_ID = 'msgFromAddressId';
     public const MSG_SUBJECT_ID = 'msgSubjectId';
@@ -31,6 +34,8 @@ class WsclLearnPluginOptions extends PluginOptions
     protected function getOptionKeys(): array
     {
         return [
+            self::SITE_EMAIL_NAME_KEY,
+            self::SITE_EMAIL_ADDRESS_KEY,
             self::MSG_FROM_NAME_ID,
             self::MSG_FROM_ADDRESS_ID,
             self::MSG_SUBJECT_ID,
@@ -79,5 +84,15 @@ class WsclLearnPluginOptions extends PluginOptions
     public function getMsgBody(): string
     {
         return $this->getValue(self::MSG_BODY_ID);
+    }
+
+    public function getSiteEmailName(): string
+    {
+        return $this->getValue(self::SITE_EMAIL_NAME_KEY);
+    }
+
+    public function getSiteEmailAddress(): string
+    {
+        return $this->getValue(self::SITE_EMAIL_ADDRESS_KEY);
     }
 }
