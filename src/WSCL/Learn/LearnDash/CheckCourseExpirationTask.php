@@ -149,7 +149,7 @@ class CheckCourseExpirationTask implements RcsWpBgTask
 
         $htmlBody = "<html><body>{$body}</body></html>";
 
-        (new WpMailWrapper())
+        (new WpMailWrapper(PluginLogger::init()))
             ->setFrom($options->getMsgFromAddress(), $options->getMsgFromName())
             ->addTo($wpUser->user_email, $wpUser->first_name . ' ' . $wpUser->last_name)
             ->setSubject($subject)
