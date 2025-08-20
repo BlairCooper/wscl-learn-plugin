@@ -43,6 +43,22 @@ class WsclLearnPluginOptions extends PluginOptions
             ];
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\PluginOptions::initializeInstance()
+     */
+    protected function initializeInstance(): void
+    {
+        parent::initializeInstance();
+
+        if (empty($this->getSiteEmailName())) {
+            $this->setValue(self::SITE_EMAIL_NAME_KEY, 'WSCL Learning');
+            $this->setValue(self::SITE_EMAIL_ADDRESS_KEY, 'info@washingtonleague.org');
+        }
+    }
+
+
     /*
      * Convienence functions
      */
