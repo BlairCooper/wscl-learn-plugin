@@ -1,0 +1,36 @@
+{
+	"name" : "wscl/wscl-learn-plugin",
+	"description" : "Customization plugin for learn.washingtonleague.org",
+	"type" : "library",
+	"version" : "2.0.0",
+	"minimum-stability" : "stable",
+	"require" : {
+		"php" : ">=8.2",
+		"composer/installers" : "~2.3",
+		"deliciousbrains/wp-background-processing" : "~1.4",
+		"soundasleep/html2text" : "~2.1",
+		"psr/log" : "~3.0",
+		"monolog/monolog" : "~3.9"
+	},
+	"require-dev" : {
+		"phpstan/phpstan" : "^2.1",
+		"phpstan/extension-installer" : "~1.4",
+		"szepeviktor/phpstan-wordpress" : "~2.0",
+		"phpunit/phpunit" : "~11.5"
+	},
+	"autoload" : {
+		"classmap" : [
+			"src/"
+		],
+		"psr-4" : {
+			"" : "src"
+		}
+	},
+	"config" : {
+		"allow-plugins" : {
+			"composer/installers" : true,
+			"php-http/discovery" : true,
+			"phpstan/extension-installer" : true
+		}
+	}
+}

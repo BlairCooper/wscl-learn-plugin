@@ -1,0 +1,31 @@
+parameters:
+    level: 6
+    paths:
+        - src
+        - ./entryPoint.php
+    excludePaths:
+        - vendor
+    ignoreErrors:
+        - identifier: class.notFound
+
+        # WordPress functions
+        - '#Function ld_update_course_access not found#'
+        - '#Function learndash_delete_course_progress not found#'
+        - '#Function learndash_delete_user_activity not found#'
+        - '#Function learndash_get_course_users_access_from_meta not found#'
+        - '#Function learndash_get_user_activity not found#'
+        
+        # Enfold theme functions
+        #- '#Function av_icon_string not found#'
+        #- '#Function avia_backend_truncate not found#'
+        #- '#Function avia_get_option not found#'
+        #- '#Function avia_layout_class not found#'
+        #- '#Function avia_markup_helper not found#'
+        #- '#Function avia_title not found#'
+        #- '#Function avia_which_archive not found#'
+
+        # WordPress class members
+        #- '#Access to property \$post_content on an unknown class WP_Post#'
+        #- '#Access to property \$post_type on an unknown class WP_Post#'
+
+        # WordPress Constants

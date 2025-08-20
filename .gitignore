@@ -1,0 +1,5 @@
+.phpunit.cache
+.settings
+report
+vendor
+node_modules

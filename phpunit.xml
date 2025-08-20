@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.3/phpunit.xsd" backupGlobals="false" bootstrap="phpunit-bootstrap.php" stopOnRisky="true" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <coverage>
+    <report>
+      <clover outputFile="report/coverage.xml"/>
+      <html outputDirectory="report" lowUpperBound="35" highLowerBound="70"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="Tests">
+      <directory suffix="Test.php">test</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <const name="PHPUNIT_RUNNING" value="true"/>
+  </php>
+  <source>
+    <include>
+      <directory>src/**</directory>
+    </include>
+  </source>
+</phpunit>
