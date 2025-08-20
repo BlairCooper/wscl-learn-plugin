@@ -60,6 +60,7 @@ function setupEmptyFolder(folder, cb) {
 }
 
 function cleanTask(cb) {
+    cb();
 }
 
 function updateComposerJsonVersion() {
