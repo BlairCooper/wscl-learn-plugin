@@ -10,18 +10,17 @@ class LearnDashCronJob extends CronJob
 {
     private const CRON_JOB_HOOK = 'WsclLearnPressDailyCron';
 
-    /** @var BgProcess */
-    private $bgProcess;
-
     /**
      *
      * @param BgProcess $bgProcess
+     * @param LoggerInterface $logger
      */
-    protected function __construct(BgProcess $bgProcess, LoggerInterface $logger)
+    protected function __construct(
+        private BgProcess $bgProcess,
+        LoggerInterface $logger
+        )
     {
         parent::__construct($logger);
-
-        $this->bgProcess = $bgProcess;
     }
 
     protected function initializeInstance(): void

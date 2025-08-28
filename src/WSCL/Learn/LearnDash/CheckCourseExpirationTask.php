@@ -27,19 +27,16 @@ class CheckCourseExpirationTask extends BgTask
         self::PH_COURSES_URL    => 'The URL to the Courses list on the web site'
     ];
 
-    protected int $wpUserId;
-    /** @var int[] */
-    protected array $courseIds = [];
-
     /**
      *
      * @param int $wpUserId
      * @param int[] $courseIds
      */
-    public function __construct(int $wpUserId, array $courseIds)
+    public function __construct(
+        protected int $wpUserId,
+        protected array $courseIds
+        )
     {
-        $this->wpUserId = $wpUserId;
-        $this->courseIds = $courseIds;
     }
 
     /**
