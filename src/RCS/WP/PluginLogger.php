@@ -15,12 +15,13 @@ class PluginLogger implements LoggerInterface
 {
     use SingletonTrait;
 
-    private string $pluginSlug;
     private string $logFile= '';
 
-    private LoggerInterface $logger;
+    private LoggerInterface $backingLogger;
 
-    protected function __construct(?string $pluginSlug)
+    protected function __construct(
+        private ?string $pluginSlug = null
+        )
     {
         if (is_null($pluginSlug)) {
             $this->pluginSlug = 'unknown_plugin';
@@ -72,7 +73,7 @@ class PluginLogger implements LoggerInterface
                 return $record;
             });
 
-                $this->logger = $logger;
+            $this->backingLogger = $logger;
     }
 
     public function getLogFile(): string
@@ -86,7 +87,7 @@ class PluginLogger implements LoggerInterface
      */
     public function alert(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->alert($message, $context);
+        $this->backingLogger->alert($message, $context);
     }
 
     /**
@@ -95,7 +96,7 @@ class PluginLogger implements LoggerInterface
      */
     public function critical(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->critical($message, $context);
+        $this->backingLogger->critical($message, $context);
     }
 
     /**
@@ -104,7 +105,7 @@ class PluginLogger implements LoggerInterface
      */
     public function debug(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->debug($message, $context);
+        $this->backingLogger->debug($message, $context);
     }
 
     /**
@@ -113,7 +114,7 @@ class PluginLogger implements LoggerInterface
      */
     public function emergency(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->emergency($message, $context);
+        $this->backingLogger->emergency($message, $context);
     }
 
     /**
@@ -122,7 +123,7 @@ class PluginLogger implements LoggerInterface
      */
     public function error(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->error($message, $context);
+        $this->backingLogger->error($message, $context);
     }
 
     /**
@@ -131,7 +132,7 @@ class PluginLogger implements LoggerInterface
      */
     public function info(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->info($message, $context);
+        $this->backingLogger->info($message, $context);
     }
 
     /**
@@ -140,7 +141,7 @@ class PluginLogger implements LoggerInterface
      */
     public function log($level, string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->log($level, $message, $context);
+        $this->backingLogger->log($level, $message, $context);
     }
 
     /**
@@ -149,7 +150,7 @@ class PluginLogger implements LoggerInterface
      */
     public function notice(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->notice($message, $context);
+        $this->backingLogger->notice($message, $context);
     }
 
     /**
@@ -158,6 +159,6 @@ class PluginLogger implements LoggerInterface
      */
     public function warning(string|\Stringable $message, array $context = array()): void
     {
-        $this->logger->warning($message, $context);
+        $this->backingLogger->warning($message, $context);
     }
 }

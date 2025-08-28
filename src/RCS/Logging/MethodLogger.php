@@ -6,12 +6,12 @@ use Psr\Log\LoggerInterface;
 
 class MethodLogger
 {
-    private LoggerInterface $logger;
-
     private string $method;
     private Timer $timer;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(
+        private LoggerInterface $logger
+        )
     {
         $this->logger = $logger;
         $this->method = $this->getCallingMethodName();

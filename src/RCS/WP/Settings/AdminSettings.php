@@ -9,24 +9,6 @@ abstract class AdminSettings
 {
     use SingletonTrait;
 
-    /**
-     * @var string  $plugin_name    The ID of this plugin.
-     */
-    protected string $pluginName;
-
-    /**
-     * @var string  $version    The current version of this plugin.
-     */
-    protected string $version;
-
-    protected string $pluginUrl;
-
-    protected LoggerInterface $logger;
-
-    protected string $optionsPageTitle;
-    protected string $optionsPageSlug;
-    protected string $optionsMenuTitle;
-
     /** @var AdminSettingsTab[] */
     private array $tabs = array();
 
@@ -37,24 +19,15 @@ abstract class AdminSettings
      * @param      string    $version    The version of this plugin.
      */
     protected function __construct(
-        string $pluginName,
-        string $version,
-        string $url,
-        string $pageTitle,
-        string $pageSlug,
-        string $menuTitle,
-        LoggerInterface $logger
+        protected string $pluginName,
+        protected string $version,
+        protected string $pluginUrl,
+        protected string $optionsPageTitle,
+        protected string $optionsPageSlug,
+        protected string $optionsMenuTitle,
+        protected LoggerInterface $logger
         )
     {
-        $this->pluginName = $pluginName;
-        $this->version = $version;
-        $this->pluginUrl = $url;
-
-        $this->optionsPageTitle = $pageTitle;
-        $this->optionsPageSlug = $pageSlug;
-        $this->optionsMenuTitle = $menuTitle;
-
-        $this->logger = $logger;
     }
 
     protected function initializeInstance(): void

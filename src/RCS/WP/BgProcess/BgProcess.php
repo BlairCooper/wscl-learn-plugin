@@ -24,8 +24,6 @@ class BgProcess extends \WP_Background_Process
     protected $prefix = 'rcs';
     protected $action = self::ACTION_NAME;
 
-    protected LoggerInterface $logger;
-
     /** @var array<mixed> */
     protected array $taskParams;
 
@@ -37,11 +35,13 @@ class BgProcess extends \WP_Background_Process
      * @param array<mixed> $params A set of parameters that will be provided to each
      *      task when it is run.
      */
-    public function __construct(LoggerInterface $logger, ...$params)
+    public function __construct(
+        protected LoggerInterface $logger,
+        ...$params
+        )
     {
         parent::__construct();
 
-        $this->logger = $logger;
         $this->taskParams = $params;
     }
 

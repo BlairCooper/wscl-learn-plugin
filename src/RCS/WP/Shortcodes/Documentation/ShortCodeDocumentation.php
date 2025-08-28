@@ -4,22 +4,15 @@ namespace RCS\WP\Shortcodes\Documentation;
 
 class ShortcodeDocumentation
 {
-    /** @var string */
-    private string $name;
-
-    /** @var string */
-    private string $description;
-
-    /** @var string */
-    private string $example;
-
     /** @var ShortcodeAttribute[] */
     private $attributes = array();
 
-    public function __construct(string $name, string $desciption = '', string $example = '') {
-        $this->name = $name;
-        $this->description = $desciption;
-        $this->example = $example;
+    public function __construct(
+        private string $name,
+        private string $desciption = '',
+        private string $example = ''
+        )
+    {
     }
 
     public function addAttribute(ShortcodeAttribute $attribute): void {

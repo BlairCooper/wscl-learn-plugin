@@ -10,14 +10,11 @@ abstract class ShortcodeBase implements ShortcodeImplInf
     use SingletonTrait;
     use ShortcodeImplTrait;
 
-    protected string $shortcodeTag;
-
-    protected PluginInfo $pluginInfo;
-
-    protected function __construct(PluginInfo $pluginInfo, string $shortcodeTag)
+    protected function __construct(
+        protected PluginInfo $pluginInfo,
+        protected string $shortcodeTag
+        )
     {
-        $this->shortcodeTag = $shortcodeTag;
-        $this->pluginInfo = $pluginInfo;
     }
 
     protected function initializeInstance(): void

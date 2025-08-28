@@ -22,8 +22,6 @@ use Psr\Log\LoggerInterface;
  *
  */
 class ScopeTimer {
-    private LoggerInterface $logger;
-    private string $msg;
     private Timer $timer;
 
     /**
@@ -32,9 +30,11 @@ class ScopeTimer {
      * @param \Psr\Log\LoggerInterface $logger
      * @param string $msg
      */
-    public function __construct(LoggerInterface $logger, string $msg) {
-        $this->logger = $logger;
-        $this->msg = $msg;
+    public function __construct(
+        private LoggerInterface $logger,
+        private string $msg
+        )
+    {
         $this->timer = new Timer(true);
     }
 

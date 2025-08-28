@@ -7,28 +7,6 @@ namespace RCS\WP\Validation;
 abstract class BaseValidator
 {
     /**
-     * @var     string  Slug title of the setting to which this error applies
-     *      as defined via the implementation of the Settings API.
-     *
-     * @access  private
-     */
-    private string $setting;
-
-    /**
-     * @var     string  Field Key of the setting to which this error applies.
-     *
-     * @access private
-     */
-    private string $key;
-
-    /**
-     * @var     string  Name of the field to be validated.
-     *
-     * @access private
-     */
-    private string $fieldName;
-
-    /**
      * Creates an instance of the class and associates the specified setting
      * and key with the property of this class.
      *
@@ -36,10 +14,12 @@ abstract class BaseValidator
      * @param    string    $key        The key for the field we're validating.
      * @param    string    $fieldName  The name of the field we're validating. Defaults to ''.
      */
-    public function __construct(string $setting, string $key, string $fieldName= '') {
-        $this->setting = $setting;
-        $this->key = $key;
-        $this->fieldName = $fieldName;
+    public function __construct(
+        private string $setting,
+        private string $key,
+        private string $fieldName= ''
+        )
+    {
     }
 
     /**

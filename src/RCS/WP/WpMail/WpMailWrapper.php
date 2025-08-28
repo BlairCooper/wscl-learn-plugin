@@ -10,8 +10,6 @@ use Psr\Log\LoggerInterface;
  */
 class WpMailWrapper
 {
-    private LoggerInterface $logger;
-
     private string $fromEmail;
     private string $fromName = '';
     private string $subject = '';
@@ -33,9 +31,10 @@ class WpMailWrapper
 
     private ?WPMailWrapperPriority $priority = null;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(
+        private LoggerInterface $logger
+        )
     {
-        $this->logger = $logger;
     }
 
     public function setFrom(string $email, ?string $name = null): static

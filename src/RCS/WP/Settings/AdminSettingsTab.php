@@ -10,19 +10,17 @@ use RCS\WP\Validation\StringValidator;
 
 abstract class AdminSettingsTab
 {
-    protected string $tabName;
     protected string $tabId;
-    protected PluginOptions $options;
-    protected LoggerInterface $logger;
 
     protected string $pageSlug;
 
-    public function __construct(string $tabName, PluginOptions $options, LoggerInterface $logger)
+    public function __construct(
+        protected string $tabName,
+        protected PluginOptions $options,
+        protected LoggerInterface $logger
+        )
     {
-        $this->tabName = $tabName;
         $this->tabId = $this->generateTabId();
-        $this->options = $options;
-        $this->logger = $logger;
     }
 
     /**

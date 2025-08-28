@@ -19,17 +19,16 @@ abstract class CronJob
     protected string $cronJobName;
     protected string $cronJobInterval;
 
-    protected LoggerInterface $logger;
-
     use SingletonTrait;
 
     /**
      *
      * @param LoggerInterface $logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(
+        protected LoggerInterface $logger
+        )
     {
-        $this->logger = $logger;
     }
 //     public function __construct(string $jobName, string $interval, LoggerInterface $logger, ?int $startTime = null)
 //     {

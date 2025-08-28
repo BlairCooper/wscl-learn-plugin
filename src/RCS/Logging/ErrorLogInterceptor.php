@@ -27,15 +27,11 @@ class ErrorLogInterceptor
 
     /**
      *
-     * @var array<int, string[]> $ignoreErrors
-     */
-    private array $ignoreErrors = [];
-
-    /**
-     *
      * @param array<int, string[]> $ignoreErrors
      */
-    protected function __construct(array $ignoreErrors)
+    protected function __construct(
+        private array $ignoreErrors
+        )
     {
         if (!empty($ignoreErrors)) {
             $validErrors = [

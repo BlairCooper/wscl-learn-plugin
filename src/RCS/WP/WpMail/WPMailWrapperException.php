@@ -7,18 +7,19 @@ use Throwable;
 
 final class WPMailWrapperException extends RuntimeException
 {
-    private string $debugData;
-
     /**
      *
      * @param string $message
      * @param string $debugData
      * @param Throwable $previous
      */
-    public function __construct(string $message = '', string $debugData = '', Throwable $previous = null)
+    public function __construct(
+        string $message = '',
+        private string $debugData = '',
+        Throwable $previous = null
+        )
     {
         parent::__construct($message, 0, $previous);
-        $this->debugData = $debugData;
     }
 
     public static function createException(\WP_Error $error): WPMailWrapperException
