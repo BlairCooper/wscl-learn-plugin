@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace RCS\WP\Traits;
+namespace RCS\Traits;
 
 // If this file is called directly, abort.
 defined('ABSPATH') || exit;
 
-if (!trait_exists( 'RCS\WP\Traits\SingletonTrait')) {
+if (!trait_exists( 'RCS\Traits\SingletonTrait')) {
 
     /**
      * Trait Singleton

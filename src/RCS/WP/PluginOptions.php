@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace RCS\WP;
 
-use RCS\WP\Traits\SingletonTrait;
+use RCS\Traits\SingletonTrait;
 
 abstract class PluginOptions
 {

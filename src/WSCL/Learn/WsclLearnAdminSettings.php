@@ -5,6 +5,7 @@ namespace WSCL\Learn;
 use RCS\WP\PluginInfo;
 use RCS\WP\Settings\AdminSettings;
 use WSCL\Learn\LearnDash\LearnDashSettingsTab;
+use Psr\Log\LoggerInterface;
 
 class WsclLearnAdminSettings extends AdminSettings
 {
@@ -17,21 +18,22 @@ class WsclLearnAdminSettings extends AdminSettings
      *
      * @param PluginInfo $pluginInfo
      */
-    public function __construct(PluginInfo $pluginInfo) {
+    public function __construct(PluginInfo $pluginInfo, LoggerInterface $logger) {
         parent::__construct(
             $pluginInfo->name,
             $pluginInfo->version,
             $pluginInfo->url,
             self::OPTIONS_PAGE_TITLE,
             self::OPTIONS_PAGE_SLUG,
-            self::OPTIONS_MENU_TITLE
+            self::OPTIONS_MENU_TITLE,
+            $logger
             );
     }
 
     public function initializeInstance(): void {
         parent::initializeInstance();
 
-        $this->registerTab(new GeneralOptionsTab());
-        $this->registerTab(new LearnDashSettingsTab());
+        $this->registerTab(new GeneralOptionsTab($this->logger));
+        $this->registerTab(new LearnDashSettingsTab($this->logger));
     }
 }

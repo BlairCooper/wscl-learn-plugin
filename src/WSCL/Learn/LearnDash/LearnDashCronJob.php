@@ -2,46 +2,42 @@
 declare(strict_types=1);
 namespace WSCL\Learn\LearnDash;
 
-use RCS\WP\Traits\CronJobTrait;
-use RCS\WP\Traits\SingletonTrait;
-use RCS\WP\BgProcess\RcsWpBgProcess;
-use RCS\WP\PluginLogger;
+use Psr\Log\LoggerInterface;
+use RCS\WP\CronJob;
+use RCS\WP\BgProcess\BgProcess;
 
-class LearnDashCronJob
+class LearnDashCronJob extends CronJob
 {
     private const CRON_JOB_HOOK = 'WsclLearnPressDailyCron';
 
-    use SingletonTrait;
-    use CronJobTrait;
-
-    /** @var RcsWpBgProcess */
+    /** @var BgProcess */
     private $bgProcess;
 
     /**
      *
-     * @param RcsWpBgProcess $bgProcess
+     * @param BgProcess $bgProcess
      */
-    protected function __construct(RcsWpBgProcess $bgProcess)
+    protected function __construct(BgProcess $bgProcess, LoggerInterface $logger)
     {
+        parent::__construct($logger);
+
         $this->bgProcess = $bgProcess;
     }
 
     protected function initializeInstance(): void
     {
-        $date = new \DateTime('today midnight');
-        $date->modify('+1 day');
-
-        $this->initializeCronJob(self::CRON_JOB_HOOK, 'daily', $date->getTimestamp());
+        $this->initializeCronJob(self::CRON_JOB_HOOK, 'daily');
     }
+
 
     /**
      *
+     * {@inheritDoc}
+     * @see \RCS\WP\CronJob::runJob()
      */
-    public function runCronJob(): void
+    protected function runJob(): void
     {
-        $logger = PluginLogger::init();
-
-        $logger->debug('Running LearnPressCronJob');
+        $this->logger->debug('Running LearnPressCronJob');
 
         if (!self::isJobActive($this->bgProcess)) {
             $courseIds = $this->getLevel1CourseIds();
@@ -57,13 +53,13 @@ class LearnDashCronJob
                 }
 
                 foreach (array_unique($wpUserIds) as $wpUserId) {
-                    $this->bgProcess->push_to_queue(new CheckCourseExpirationTask(intval($wpUserId), $courseIds));
+                    $this->bgProcess->addTask(new CheckCourseExpirationTask(intval($wpUserId), $courseIds));
                 }
 
                 $this->bgProcess->save();
             }
         } else {
-            $logger->debug('Existing job in progress!?');
+            $this->logger->debug('Existing job in progress!?');
         }
 
         $this->bgProcess->dispatch();

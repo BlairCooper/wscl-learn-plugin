@@ -6,6 +6,7 @@ use RCS\WP\Settings\AdminSettingsTab;
 use RCS\WP\Validation\EmailValidator;
 use RCS\WP\Validation\StringValidator;
 use WSCL\Learn\WsclLearnPluginOptions;
+use Psr\Log\LoggerInterface;
 
 class LearnDashSettingsTab extends AdminSettingsTab
 {
@@ -22,11 +23,12 @@ class LearnDashSettingsTab extends AdminSettingsTab
         WsclLearnPluginOptions::MSG_BODY_ID          => 'Message Body'
     );
 
-    public function __construct()
+    public function __construct(LoggerInterface $logger)
     {
         parent::__construct(
             self::TAB_NAME,
-            WsclLearnPluginOptions::init());
+            WsclLearnPluginOptions::init(),
+            $logger);
     }
 
     public function addSettings(string $pageSlug): void
@@ -137,7 +139,7 @@ class LearnDashSettingsTab extends AdminSettingsTab
     public function sanitize(string $pageSlug, ?array $input): ?array
     {
         if (!is_null($input)) {
-            $this->log->info('Sanitizing data: ', $input);
+            $this->logger->info('Sanitizing data: ', $input);
 
             foreach ($input as $key => $value) {
                 switch ($key) {
@@ -165,7 +167,7 @@ class LearnDashSettingsTab extends AdminSettingsTab
                 }
             }
 
-            $this->log->info('Post sanitized data:', $this->options->getValues());
+            $this->logger->info('Post sanitized data:', $this->options->getValues());
 
             return $this->options->getValues();
         }

@@ -21,9 +21,7 @@ if (!isset($wordpressDir)) {
     }
 }
 
-if (isset($wordpressDir) && $wordpressDir !== FALSE) {
+if (isset($wordpressDir) && $wordpressDir !== false) {
     $wpLoad = $wordpressDir . '/wp-load.php';
-    require_once($wpLoad);
+    require_once $wpLoad;
 }
-
-?>

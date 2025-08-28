@@ -3,6 +3,7 @@ declare(strict_types = 1);
 namespace WSCL\Learn;
 
 use RCS\WP\Settings\AdminSettingsTab;
+use Psr\Log\LoggerInterface;
 
 class GeneralOptionsTab extends AdminSettingsTab
 {
@@ -17,9 +18,9 @@ class GeneralOptionsTab extends AdminSettingsTab
         WsclLearnPluginOptions::SITE_EMAIL_ADDRESS_KEY => 'General Email Address',
     );
 
-    public function __construct()
+    public function __construct(LoggerInterface $logger)
     {
-        parent::__construct(self::TAB_NAME, WsclLearnPluginOptions::init());
+        parent::__construct(self::TAB_NAME, WsclLearnPluginOptions::init(), $logger);
     }
 
     public function addSettings(string $pageSlug): void
@@ -74,7 +75,7 @@ class GeneralOptionsTab extends AdminSettingsTab
     public function sanitize(string $pageSlug, ?array $input): ?array
     {
         if (!is_null($input)) {
-            $this->log->info('Sanitizing data: ', $input);
+            $this->logger->info('Sanitizing data: ', $input);
 
             foreach ($input as $key => $value) {
                 switch ($key) {
@@ -90,7 +91,7 @@ class GeneralOptionsTab extends AdminSettingsTab
                 }
             }
 
-            $this->log->info('Post sanitized data:', $this->options->getValues());
+            $this->logger->info('Post sanitized data:', $this->options->getValues());
 
             return $this->options->getValues();
         } else {

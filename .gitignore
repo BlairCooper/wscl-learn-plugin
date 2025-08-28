@@ -5,6 +5,10 @@ vendor
 node_modules
 
 # RCS folders and/or files to ignore
-src/RCS/WP/Cache
-src/RCS/WP/Csv
-src/RCS/WP/Json
+src/RCS/Cache
+src/RCS/Csv
+src/RCS/Json
+src/RCS/PDF
+src/RCS/Util
+src/RCS/WP/Formidable
+src/RCS/WP/Rest

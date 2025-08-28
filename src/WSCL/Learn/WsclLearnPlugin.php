@@ -2,12 +2,12 @@
 declare(strict_types=1);
 namespace WSCL\Learn;
 
-use RCS\WP\ErrorLogInterceptor;
+use RCS\Logging\ErrorLogInterceptor;
 use RCS\WP\PluginInfo;
 use RCS\WP\PluginLogger;
-use RCS\WP\BgProcess\RcsWpBgProcess;
+use RCS\WP\BgProcess\BgProcess;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
-use WSCL\Learn\Shortcodes\InsertJotFormShortCode;
+use WSCL\Learn\Shortcodes\InsertJotFormShortcode;
 
 class WsclLearnPlugin
 {
@@ -29,20 +29,20 @@ class WsclLearnPlugin
             $pluginData['Name']
             );
 
-        PluginLogger::init($pluginInfo->slug);
+        $logger = PluginLogger::init($pluginInfo->slug);
 
         ErrorLogInterceptor::init([
             E_USER_NOTICE => ['_load_textdomain_just_in_time']
             ]
         );
 
-        $bgProcess = RcsWpBgProcess::init();
+        $bgProcess = new BgProcess($logger);
 
-        LearnDashCronJob::init($bgProcess);
+        LearnDashCronJob::init($bgProcess, $logger);
 
-        WsclLearnAdminSettings::init($pluginInfo);
+        WsclLearnAdminSettings::init($pluginInfo, $logger);
 
-        InsertJotFormShortCode::init($pluginInfo);
+        InsertJotFormShortcode::init($pluginInfo);
 
         add_filter(
             'wp_mail_from',

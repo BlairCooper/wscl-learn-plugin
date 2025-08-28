@@ -3,8 +3,7 @@ declare(strict_types = 1);
 namespace RCS\WP\Settings;
 
 use Psr\Log\LoggerInterface;
-use RCS\WP\Traits\SingletonTrait;
-use RCS\WP\PluginLogger;
+use RCS\Traits\SingletonTrait;
 
 abstract class AdminSettings
 {
@@ -22,7 +21,7 @@ abstract class AdminSettings
 
     protected string $pluginUrl;
 
-    protected LoggerInterface $log;
+    protected LoggerInterface $logger;
 
     protected string $optionsPageTitle;
     protected string $optionsPageSlug;
@@ -43,7 +42,8 @@ abstract class AdminSettings
         string $url,
         string $pageTitle,
         string $pageSlug,
-        string $menuTitle
+        string $menuTitle,
+        LoggerInterface $logger
         )
     {
         $this->pluginName = $pluginName;
@@ -54,7 +54,7 @@ abstract class AdminSettings
         $this->optionsPageSlug = $pageSlug;
         $this->optionsMenuTitle = $menuTitle;
 
-        $this->log = PluginLogger::init();
+        $this->logger = $logger;
     }
 
     protected function initializeInstance(): void

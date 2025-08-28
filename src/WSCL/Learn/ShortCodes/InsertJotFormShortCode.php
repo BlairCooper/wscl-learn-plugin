@@ -5,14 +5,19 @@ namespace WSCL\Learn\Shortcodes;
 use RCS\WP\PluginInfo;
 use RCS\WP\Shortcodes\ShortcodeBase;
 
-class InsertJotFormShortCode extends ShortcodeBase
+class InsertJotFormShortcode extends ShortcodeBase
 {
     protected function __construct(PluginInfo $pluginInfo)
     {
         parent::__construct($pluginInfo, 'wscl-jotform');
     }
 
-    protected function renderShortcode(array $attrs, $content = ''): string
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::renderShortcode()
+     */
+    public function renderShortcode(array $attrs = [], $content = ''): string
     {
         $result = '';
 

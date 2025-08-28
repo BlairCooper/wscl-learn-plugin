@@ -1,8 +1,8 @@
 <?php
 declare(strict_types = 1);
-namespace RCS\WP;
+namespace RCS\Logging;
 
-use RCS\WP\Traits\SingletonTrait;
+use RCS\Traits\SingletonTrait;
 
 /**
  * Intercept PHP error_log messages and filter out any messages that we don't

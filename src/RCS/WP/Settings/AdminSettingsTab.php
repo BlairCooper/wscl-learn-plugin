@@ -7,24 +7,22 @@ use RCS\WP\PluginOptions;
 use RCS\WP\Validation\EmailValidator;
 use RCS\WP\Validation\NumberValidator;
 use RCS\WP\Validation\StringValidator;
-use RCS\WP\PluginLogger;
 
 abstract class AdminSettingsTab
 {
-    protected LoggerInterface $log;
     protected string $tabName;
     protected string $tabId;
     protected PluginOptions $options;
+    protected LoggerInterface $logger;
 
     protected string $pageSlug;
 
-    public function __construct(string $tabName, PluginOptions $options)
+    public function __construct(string $tabName, PluginOptions $options, LoggerInterface $logger)
     {
         $this->tabName = $tabName;
         $this->tabId = $this->generateTabId();
         $this->options = $options;
-
-        $this->log = PluginLogger::init();
+        $this->logger = $logger;
     }
 
     /**

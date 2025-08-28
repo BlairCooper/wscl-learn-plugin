@@ -3,13 +3,13 @@ declare(strict_types = 1);
 namespace WSCL\Learn\LearnDash;
 
 use Soundasleep\Html2Text;
-use RCS\WP\PluginLogger;
-use RCS\WP\BgProcess\RcsWpBgTask;
-use RCS\WP\BgProcess\RcsWpBgProcess;
+use RCS\WP\BgProcess\BgProcess;
+use RCS\WP\BgProcess\BgTask;
 use RCS\WP\WpMail\WpMailWrapper;
 use WSCL\Learn\WsclLearnPluginOptions;
+use Psr\Log\LoggerInterface;
 
-class CheckCourseExpirationTask implements RcsWpBgTask
+class CheckCourseExpirationTask extends BgTask
 {
     private const THREE_YEARS = 3 * YEAR_IN_SECONDS;
 
@@ -43,16 +43,16 @@ class CheckCourseExpirationTask implements RcsWpBgTask
     }
 
     /**
-     * Run the task.
      *
-     * @return bool Returns true if the task is complete. Otherwise returns false.
+     * {@inheritDoc}
+     * @see \RCS\WP\BgProcess\BgTask::run()
      */
-    public function run(RcsWpBgProcess $bgProcess) : bool
+    public function run(BgProcess $bgProcess, LoggerInterface $logger, ...$params) : bool
     {
-        $coursesDue = $this->getCoursesDue();
+        $coursesDue = $this->getCoursesDue($logger);
 
         if (!empty($coursesDue)) {
-            $this->sendEmailNotification($this->wpUserId, $coursesDue);
+            $this->sendEmailNotification($this->wpUserId, $coursesDue, $logger);
         }
 
         return true;
@@ -62,7 +62,7 @@ class CheckCourseExpirationTask implements RcsWpBgTask
      *
      * @return int[]
      */
-    private function getCoursesDue(): array
+    private function getCoursesDue(LoggerInterface $logger): array
     {
         $coursesDue = [];
 
@@ -80,7 +80,7 @@ class CheckCourseExpirationTask implements RcsWpBgTask
                 $checkTime = $activity->activity_status ? $activity->activity_completed : $activity->activity_updated;
 
                 if ($checkTime < time() - self::THREE_YEARS) {
-                    PluginLogger::init()->info('Removing progress on course {courseId} for {userId}', ['courseId' => $courseId, 'userId' => $this->wpUserId]);
+                    $logger->info('Removing progress on course {courseId} for {userId}', ['courseId' => $courseId, 'userId' => $this->wpUserId]);
 
                     // Unenroll the user from the course
                     \ld_update_course_access($this->wpUserId, $courseId, true);
@@ -120,7 +120,7 @@ class CheckCourseExpirationTask implements RcsWpBgTask
      * @param int $wpUserId
      * @param int[] $coursesDue
      */
-    private function sendEmailNotification(int $wpUserId, array $coursesDue): void
+    private function sendEmailNotification(int $wpUserId, array $coursesDue, LoggerInterface $logger): void
     {
         $coursesDue = array_map(fn($postId) => \get_post($postId)->post_title, $coursesDue);
 
@@ -149,7 +149,7 @@ class CheckCourseExpirationTask implements RcsWpBgTask
 
         $htmlBody = "<html><body>{$body}</body></html>";
 
-        (new WpMailWrapper(PluginLogger::init()))
+        (new WpMailWrapper($logger))
             ->setFrom($options->getMsgFromAddress(), $options->getMsgFromName())
             ->addTo($wpUser->user_email, $wpUser->first_name . ' ' . $wpUser->last_name)
             ->setSubject($subject)
