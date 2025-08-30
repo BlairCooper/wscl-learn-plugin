@@ -2,7 +2,7 @@
 	"name" : "wscl/wscl-learn-plugin",
 	"description" : "Customization plugin for learn.washingtonleague.org",
 	"type" : "library",
-	"version" : "2.0.2",
+	"version" : "2.0.3",
 	"minimum-stability" : "stable",
 	"require" : {
 		"php" : ">=8.2",
