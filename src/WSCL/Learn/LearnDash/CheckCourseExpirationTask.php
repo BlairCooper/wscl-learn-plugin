@@ -44,7 +44,7 @@ class CheckCourseExpirationTask extends BgTask
      * {@inheritDoc}
      * @see \RCS\WP\BgProcess\BgTask::run()
      */
-    public function run(BgProcess $bgProcess, LoggerInterface $logger, ...$params) : bool
+    public function run(BgProcess $bgProcess, LoggerInterface $logger) : bool
     {
         $coursesDue = $this->getCoursesDue($logger);
 

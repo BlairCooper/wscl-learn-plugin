@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace RCS\WP\Shortcodes;
 
-use RCS\WP\PluginInfo;
 use RCS\Traits\SingletonTrait;
+use RCS\WP\PluginInfoInterface;
 
 abstract class ShortcodeBase implements ShortcodeImplInf
 {
@@ -11,7 +11,7 @@ abstract class ShortcodeBase implements ShortcodeImplInf
     use ShortcodeImplTrait;
 
     protected function __construct(
-        protected PluginInfo $pluginInfo,
+        protected PluginInfoInterface $pluginInfo,
         protected string $shortcodeTag
         )
     {
@@ -33,7 +33,7 @@ abstract class ShortcodeBase implements ShortcodeImplInf
                             $scriptMeta->id,
                             $scriptMeta->url,
                             $scriptMeta->deps,
-                            $this->pluginInfo->version,
+                            $this->pluginInfo->getVersion(),
                             [
                                 'strategy' => $scriptMeta->strategy   // Note: Using defer breaks the map at the bottom of the pages
                             ]
@@ -46,7 +46,7 @@ abstract class ShortcodeBase implements ShortcodeImplInf
                         $styleMeta->id,
                         $styleMeta->url,
                         $styleMeta->deps,
-                        $this->pluginInfo->version,
+                        $this->pluginInfo->getVersion(),
                         );
                 }
 

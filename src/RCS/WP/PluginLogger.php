@@ -15,29 +15,20 @@ class PluginLogger implements LoggerInterface
 {
     use SingletonTrait;
 
-    private string $logFile= '';
-
     private LoggerInterface $backingLogger;
 
     protected function __construct(
-        private ?string $pluginSlug = null
+        private PluginInfoInterface $pluginInfo
         )
     {
-        if (is_null($pluginSlug)) {
-            $this->pluginSlug = 'unknown_plugin';
-        } else {
-            $this->pluginSlug = $pluginSlug;
-        }
     }
 
     protected function initializeInstance(): void
     {
-        $uploadDirInfo = wp_get_upload_dir();
-
-        $logDir = trailingslashit(trailingslashit($uploadDirInfo['basedir']) . $this->pluginSlug);
+        $logDir = $this->pluginInfo->getWriteDir() . 'logs';
         wp_mkdir_p($logDir);
 
-        $this->logFile = $logDir . $this->pluginSlug . '.log';
+        $logFile = $logDir . $this->pluginInfo->getSlug() . '.log';
 
         $dateFormat = 'M d H:i:s';
         $msgFormat = join(' ', [
@@ -55,10 +46,10 @@ class PluginLogger implements LoggerInterface
 //             $handler = new StreamHandler($this->logFile);
 //             $handler->setFormatter($formatter); //  attach the formatter to the handler
 
-            $handler = new RotatingFileHandler($this->logFile, 14, Level::Debug);
+            $handler = new RotatingFileHandler($logFile, 14, Level::Debug);
             $handler->setFormatter($formatter); //  attach the formatter to the handler
 
-            $logger = new Logger($this->pluginSlug);
+            $logger = new Logger($this->pluginInfo->getSlug());
             $logger->pushHandler($handler);
             $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
             $logger->pushProcessor(function (LogRecord $record): LogRecord {
@@ -74,11 +65,6 @@ class PluginLogger implements LoggerInterface
             });
 
             $this->backingLogger = $logger;
-    }
-
-    public function getLogFile(): string
-    {
-        return $this->logFile;
     }
 
     /**

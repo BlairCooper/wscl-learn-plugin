@@ -17,10 +17,9 @@ abstract class BgTask
      *
      * @param BgProcess $bgProcess The background process instance. Useful
      *      when additional tasks need to be added to the queue.
-     * @param array<mixed> $params The array of parameters provided to the background
-     *      process when it was created.
+     * @param LoggerInterface $logger
      *
      * @return bool Returns true if the task is complete. Otherwise returns false.
      */
-    abstract public function run(BgProcess $bgProcess, LoggerInterface $logger, ...$params) : bool;
+    abstract public function run(BgProcess $bgProcess, LoggerInterface $logger) : bool;
 }

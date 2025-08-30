@@ -24,25 +24,17 @@ class BgProcess extends \WP_Background_Process
     protected $prefix = 'rcs';
     protected $action = self::ACTION_NAME;
 
-    /** @var array<mixed> */
-    protected array $taskParams;
-
     /**
      * Initialize the instance.
      *
      * @param LoggerInterface $logger A logger to be used by the background
      *      process and any tasks executed by the process.
-     * @param array<mixed> $params A set of parameters that will be provided to each
-     *      task when it is run.
      */
     public function __construct(
-        protected LoggerInterface $logger,
-        ...$params
+        protected LoggerInterface $logger
         )
     {
         parent::__construct();
-
-        $this->taskParams = $params;
     }
 
     /**
@@ -84,7 +76,7 @@ class BgProcess extends \WP_Background_Process
     {
         $result = $task;
 
-        if ($task->run($this, $logger, ...$this->taskParams)) {
+        if ($task->run($this, $logger)) {
             $result = false;
         }
 

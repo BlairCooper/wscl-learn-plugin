@@ -10,7 +10,8 @@
 		"deliciousbrains/wp-background-processing" : "~1.4",
 		"soundasleep/html2text" : "~2.1",
 		"psr/log" : "~3.0",
-		"monolog/monolog" : "~3.9"
+		"monolog/monolog" : "~3.9",
+		"php-di/php-di" : "~7.1"
 	},
 	"require-dev" : {
 		"phpstan/phpstan" : "^2.1",

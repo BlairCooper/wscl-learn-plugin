@@ -3,46 +3,25 @@ declare(strict_types=1);
 namespace WSCL\Learn;
 
 use RCS\Logging\ErrorLogInterceptor;
-use RCS\WP\PluginInfo;
-use RCS\WP\PluginLogger;
-use RCS\WP\BgProcess\BgProcess;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
 use WSCL\Learn\Shortcodes\InsertJotFormShortcode;
+use DI\Container;
 
 class WsclLearnPlugin
 {
     public function init(string $entryPointFile): void
     {
-        if (!function_exists('get_plugin_data')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';  // @phpstan-ignore requireOnce.fileNotFound
-        }
-
-        /** @var array<string, string> */
-        $pluginData = get_plugin_data($entryPointFile, false, false);
-
-        $pluginInfo = new PluginInfo(
-            $entryPointFile,
-            plugin_dir_path($entryPointFile),
-            plugin_dir_url($entryPointFile),
-            $pluginData['Version'],
-            $pluginData['TextDomain'],
-            $pluginData['Name']
-            );
-
-        $logger = PluginLogger::init($pluginInfo->slug);
+        $container = new Container(ServiceConfig::getDefinitions());
+        $container->set(ServiceConfig::PLUGIN_ENTRYPOINT, $entryPointFile);
 
         ErrorLogInterceptor::init([
             E_USER_NOTICE => ['_load_textdomain_just_in_time']
             ]
         );
 
-        $bgProcess = new BgProcess($logger);
-
-        LearnDashCronJob::init($bgProcess, $logger);
-
-        WsclLearnAdminSettings::init($pluginInfo, $logger);
-
-        InsertJotFormShortcode::init($pluginInfo);
+        $container->get(LearnDashCronJob::class);
+        $container->get(WsclLearnAdminSettings::class);
+        $container->get(InsertJotFormShortcode::class);
 
         add_filter(
             'wp_mail_from',
