@@ -5,8 +5,9 @@ namespace WSCL\Learn\LearnDash;
 use RCS\WP\Settings\AdminSettingsTab;
 use RCS\WP\Validation\EmailValidator;
 use RCS\WP\Validation\StringValidator;
-use WSCL\Learn\WsclLearnPluginOptions;
+use WSCL\Learn\WsclLearnOptions;
 use Psr\Log\LoggerInterface;
+use WSCL\Learn\WsclLearnOptionsInterface;
 
 class LearnDashSettingsTab extends AdminSettingsTab
 {
@@ -17,18 +18,15 @@ class LearnDashSettingsTab extends AdminSettingsTab
 
     /** @var array<string, string> */
     private static array $fieldNameMap = array (
-        WsclLearnPluginOptions::MSG_FROM_NAME_ID     => 'Sender Name',
-        WsclLearnPluginOptions::MSG_FROM_ADDRESS_ID  => 'Sender Address',
-        WsclLearnPluginOptions::MSG_SUBJECT_ID       => 'Subject',
-        WsclLearnPluginOptions::MSG_BODY_ID          => 'Message Body'
+        WsclLearnOptions::MSG_FROM_NAME_ID     => 'Sender Name',
+        WsclLearnOptions::MSG_FROM_ADDRESS_ID  => 'Sender Address',
+        WsclLearnOptions::MSG_SUBJECT_ID       => 'Subject',
+        WsclLearnOptions::MSG_BODY_ID          => 'Message Body'
     );
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, WsclLearnOptionsInterface $options)
     {
-        parent::__construct(
-            self::TAB_NAME,
-            WsclLearnPluginOptions::init(),
-            $logger);
+        parent::__construct(self::TAB_NAME, $options, $logger);
     }
 
     public function addSettings(string $pageSlug): void
@@ -46,12 +44,12 @@ class LearnDashSettingsTab extends AdminSettingsTab
             );
 
         add_settings_field(
-            WsclLearnPluginOptions::MSG_FROM_NAME_ID,
-            self::$fieldNameMap[WsclLearnPluginOptions::MSG_FROM_NAME_ID], // field Title
+            WsclLearnOptions::MSG_FROM_NAME_ID,
+            self::$fieldNameMap[WsclLearnOptions::MSG_FROM_NAME_ID], // field Title
             function () {
                 $this->renderTextField(
-                    $this->options,
-                    WsclLearnPluginOptions::MSG_FROM_NAME_ID,
+                    $this->getFormFieldInfo(WsclLearnOptions::MSG_FROM_NAME_ID),
+                    WsclLearnOptions::MSG_FROM_NAME_ID,
                     'The name messages should appear from.',
                     array (
                         'size'      => 40,
@@ -65,12 +63,12 @@ class LearnDashSettingsTab extends AdminSettingsTab
             );
 
         add_settings_field(
-            WsclLearnPluginOptions::MSG_FROM_ADDRESS_ID,
-            self::$fieldNameMap[WsclLearnPluginOptions::MSG_FROM_ADDRESS_ID], // field Title
+            WsclLearnOptions::MSG_FROM_ADDRESS_ID,
+            self::$fieldNameMap[WsclLearnOptions::MSG_FROM_ADDRESS_ID], // field Title
             function () {
                 $this->renderEmailField(
-                    $this->options,
-                    WsclLearnPluginOptions::MSG_FROM_ADDRESS_ID,
+                    $this->getFormFieldInfo(WsclLearnOptions::MSG_FROM_ADDRESS_ID),
+                    WsclLearnOptions::MSG_FROM_ADDRESS_ID,
                     'The email address messages should appear from.'
                     );
             }, // Callback
@@ -79,12 +77,12 @@ class LearnDashSettingsTab extends AdminSettingsTab
             );
 
         add_settings_field(
-            WsclLearnPluginOptions::MSG_SUBJECT_ID,
-            self::$fieldNameMap[WsclLearnPluginOptions::MSG_SUBJECT_ID], // field Title
+            WsclLearnOptions::MSG_SUBJECT_ID,
+            self::$fieldNameMap[WsclLearnOptions::MSG_SUBJECT_ID], // field Title
             function () {
                 $this->renderTextField(
-                    $this->options,
-                    WsclLearnPluginOptions::MSG_SUBJECT_ID,
+                    $this->getFormFieldInfo(WsclLearnOptions::MSG_SUBJECT_ID),
+                    WsclLearnOptions::MSG_SUBJECT_ID,
                     'Placeholders available in the body can also be used in the subject',
                     array (
                         'size'      => 80,
@@ -113,12 +111,12 @@ class LearnDashSettingsTab extends AdminSettingsTab
             );
 
         add_settings_field(
-            WsclLearnPluginOptions::MSG_BODY_ID,
-            self::$fieldNameMap[WsclLearnPluginOptions::MSG_BODY_ID], // field Title
+            WsclLearnOptions::MSG_BODY_ID,
+            self::$fieldNameMap[WsclLearnOptions::MSG_BODY_ID], // field Title
             function () use ($fieldDescription) {
                 $this->renderRteTextField(
-                    $this->options,
-                    WsclLearnPluginOptions::MSG_BODY_ID,
+                    $this->getFormFieldInfo(WsclLearnOptions::MSG_BODY_ID),
+                    WsclLearnOptions::MSG_BODY_ID,
                     $fieldDescription
                     );
             },
@@ -143,20 +141,20 @@ class LearnDashSettingsTab extends AdminSettingsTab
 
             foreach ($input as $key => $value) {
                 switch ($key) {
-                    case WsclLearnPluginOptions::MSG_FROM_ADDRESS_ID:
+                    case WsclLearnOptions::MSG_FROM_ADDRESS_ID:
                         if ( (new EmailValidator($this->pageSlug, $key, self::$fieldNameMap[$key]))->isValid($value) ) {
                             $this->options->setValue($key, sanitize_text_field($value));
                         }
                         break;
 
-                    case WsclLearnPluginOptions::MSG_FROM_NAME_ID:
-                    case WsclLearnPluginOptions::MSG_SUBJECT_ID:
+                    case WsclLearnOptions::MSG_FROM_NAME_ID:
+                    case WsclLearnOptions::MSG_SUBJECT_ID:
                         if ((new StringValidator($this->pageSlug, $key, self::$fieldNameMap[$key]))->isValid($value)) {
                             $this->options->setValue( $key, sanitize_text_field($value) );
                         }
                         break;
 
-                    case WsclLearnPluginOptions::MSG_BODY_ID:
+                    case WsclLearnOptions::MSG_BODY_ID:
                         if ((new StringValidator($this->pageSlug, $key, self::$fieldNameMap[$key]))->isValid($value)) {
                             $this->options->setValue( $key, wpautop(wp_kses_post($value)) );
                         }

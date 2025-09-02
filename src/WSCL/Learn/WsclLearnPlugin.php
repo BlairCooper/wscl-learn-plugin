@@ -4,37 +4,87 @@ namespace WSCL\Learn;
 
 use RCS\Logging\ErrorLogInterceptor;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
-use WSCL\Learn\Shortcodes\InsertJotFormShortcode;
-use DI\Container;
+use DI\ContainerBuilder;
 
 class WsclLearnPlugin
 {
+    private WsclLearnOptionsInterface $options;
+
     public function init(string $entryPointFile): void
     {
-        $container = new Container(ServiceConfig::getDefinitions());
-        $container->set(ServiceConfig::PLUGIN_ENTRYPOINT, $entryPointFile);
+        add_action(
+            'init',
+            function () use ($entryPointFile) {
+                if (!function_exists('get_home_path')) {
+                    require_once ABSPATH . 'wp-admin/includes/file.php';    // @phpstan-ignore requireOnce.fileNotFound
+                }
 
-        ErrorLogInterceptor::init([
-            E_USER_NOTICE => ['_load_textdomain_just_in_time']
-            ]
-        );
+                $containerBuilder = new ContainerBuilder();
+                $containerBuilder->addDefinitions(ServiceConfig::getDefinitions());
 
-        $container->get(LearnDashCronJob::class);
-        $container->get(WsclLearnAdminSettings::class);
-        $container->get(InsertJotFormShortcode::class);
+                if (!file_exists(get_home_path() . 'wp-config-local.php')) {
+                    $containerBuilder->enableCompilation(self::getCompiledContainerPath());
+                }
+
+                $container = $containerBuilder->build();
+
+                $container->set(ServiceConfig::PLUGIN_ENTRYPOINT, $entryPointFile);
+
+                ErrorLogInterceptor::init([
+                    E_USER_NOTICE => ['_load_textdomain_just_in_time']
+                    ]
+                );
+
+                $container->get(LearnDashCronJob::class);
+                $container->get(ServiceConfig::SHORTCODES);
+
+                if (is_admin()) {
+                    $container->get(WsclLearnAdminSettings::class);
+                }
+
+                $this->options = $container->get(WsclLearnOptionsInterface::class);
+            }
+            );
 
         add_filter(
             'wp_mail_from',
             function (string $fromEmail) {
-                return WsclLearnPluginOptions::init()->getSiteEmailAddress();
+                return $this->options->getSiteEmailAddress();
             }
         );
 
         add_filter(
             'wp_mail_from_name',
             function (string $fromName) {
-                return WsclLearnPluginOptions::init()->getSiteEmailName();
+                return $this->options->getSiteEmailName();
             }
         );
+
+        add_action(
+            'upgrader_process_complete',
+            function (object $upgrader_object, array $options) use ($entryPointFile) {
+                if ($options['action'] == 'update' &&
+                    $options['type'] == 'plugin' &&
+                    isset( $options['plugins'] ) &&
+                    in_array( plugin_basename( $entryPointFile ), $options['plugins']))
+                {
+                    $path = self::getCompiledContainerPath();
+
+                    if (file_exists($path)) {
+                        array_map('unlink', glob("$path/*.php"));
+                    }
+                }
+            },
+            10,
+            2
+        );
+    }
+
+    public static function getCompiledContainerPath(): string
+    {
+        $reflectionClass = new \ReflectionClass(self::class);
+        $shortName = $reflectionClass->getShortName();
+
+        return \wp_upload_dir()['basedir'] . DIRECTORY_SEPARATOR . 'CompiledContainers' . DIRECTORY_SEPARATOR . $shortName;
     }
 }

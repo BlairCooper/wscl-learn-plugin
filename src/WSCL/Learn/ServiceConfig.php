@@ -4,16 +4,23 @@ namespace WSCL\Learn;
 
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RCS\WP\PluginLogger;
-use RCS\WP\PluginInfoInterface;
+use RCS\WP\Database\DatabaseUpdater;
 use RCS\WP\PluginInfo;
+use RCS\WP\PluginInfoInterface;
+use RCS\WP\PluginLogger;
+use RCS\WP\PluginOptionsInterface;
 use RCS\WP\BgProcess\BgProcess;
+use RCS\WP\BgProcess\BgProcessInterface;
+use RCS\WP\Database\DatabaseUpdatesInterface;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
+use WSCL\Learn\LearnDash\LearnDashSettingsTab;
 use WSCL\Learn\Shortcodes\InsertJotFormShortcode;
 
 class ServiceConfig
 {
     public const PLUGIN_ENTRYPOINT = 'plugin.entryPoint';
+    public const SETTINGS_TABS = 'settings.tabs';
+    public const SHORTCODES = 'shortcode.objs';
 
     /**
      *
@@ -22,38 +29,39 @@ class ServiceConfig
     public static function getDefinitions(): array
     {
         return [
-            PluginInfoInterface::class => function(ContainerInterface $container) {
-                return PluginInfo::init(
-                    $container->get(ServiceConfig::PLUGIN_ENTRYPOINT)
-                    );
+            PluginInfoInterface::class => \DI\create(PluginInfo::class)
+                ->constructor(\DI\get(ServiceConfig::PLUGIN_ENTRYPOINT)),
+
+            LoggerInterface::class => \DI\autowire(PluginLogger::class),
+
+            WsclLearnOptionsInterface::class => \DI\factory([WsclLearnOptions::class, 'init']),
+            PluginOptionsInterface::class => \DI\get(WsclLearnOptionsInterface::class),
+
+            BgProcessInterface::class => function(LoggerInterface $logger, WsclLearnOptionsInterface $options) {
+                return new BgProcess($logger, $options);
             },
-            LoggerInterface::class => function(ContainerInterface $container) {
-                return PluginLogger::init(
-                    $container->get(PluginInfoInterface::class)
-                    );
-            },
-            BgProcess::class => function(ContainerInterface $container) {
-                return new BgProcess(
-                    $container->get(LoggerInterface::class)
-                    );
-            },
+
             LearnDashCronJob::class => function (ContainerInterface $container) {
                 return LearnDashCronJob::init(
-                    $container->get(BgProcess::class),
+                    $container->get(BgProcessInterface::class),
                     $container->get(LoggerInterface::class)
                 );
             },
-            WsclLearnAdminSettings::class => function (ContainerInterface $container) {
-                return WsclLearnAdminSettings::init(
-                    $container->get(PluginInfoInterface::class),
-                    $container->get(LoggerInterface::class)
-                    );
-            },
-            InsertJotFormShortcode::class => function (ContainerInterface $container) {
-                return InsertJotFormShortcode::init(
-                    $container->get(PluginInfoInterface::class)
-                    );
-            }
+
+            self::SETTINGS_TABS => [
+                \DI\autowire(GeneralOptionsTab::class),
+                \DI\autowire(LearnDashSettingsTab::class),
+            ],
+
+            WsclLearnAdminSettings::class => \DI\autowire()
+                ->constructor(tabs: \DI\get(self::SETTINGS_TABS)),
+
+            self::SHORTCODES => [
+                \DI\autowire(InsertJotFormShortcode::class)
+            ],
+
+            DatabaseUpdatesInterface::class => \DI\autowire(DatabaseUpdates::class),
+            DatabaseUpdater::class => \DI\autowire()
         ];
     }
 }

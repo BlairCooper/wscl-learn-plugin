@@ -13,22 +13,20 @@ use RCS\Traits\SingletonTrait;
 
 class PluginLogger implements LoggerInterface
 {
-    use SingletonTrait;
-
     private LoggerInterface $backingLogger;
 
-    protected function __construct(
-        private PluginInfoInterface $pluginInfo
+    /**
+     *
+     * @param PluginInfoInterface $pluginInfo
+     */
+    public function __construct(
+        PluginInfoInterface $pluginInfo
         )
     {
-    }
-
-    protected function initializeInstance(): void
-    {
-        $logDir = $this->pluginInfo->getWriteDir() . 'logs';
+        $logDir = $pluginInfo->getWriteDir() . 'logs';
         wp_mkdir_p($logDir);
 
-        $logFile = $logDir . $this->pluginInfo->getSlug() . '.log';
+        $logFile = $logDir . DIRECTORY_SEPARATOR . $pluginInfo->getSlug() . '.log';
 
         $dateFormat = 'M d H:i:s';
         $msgFormat = join(' ', [
@@ -49,7 +47,7 @@ class PluginLogger implements LoggerInterface
             $handler = new RotatingFileHandler($logFile, 14, Level::Debug);
             $handler->setFormatter($formatter); //  attach the formatter to the handler
 
-            $logger = new Logger($this->pluginInfo->getSlug());
+            $logger = new Logger($pluginInfo->getSlug());
             $logger->pushHandler($handler);
             $logger->pushProcessor(new PsrLogMessageProcessor(null, true));
             $logger->pushProcessor(function (LogRecord $record): LogRecord {

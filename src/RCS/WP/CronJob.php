@@ -4,6 +4,7 @@ namespace RCS\WP;
 
 use Psr\Log\LoggerInterface;
 use RCS\Traits\SingletonTrait;
+use RCS\WP\BgProcess\BgProcessInterface;
 
 /**
  * Base class for plugin cron jobs
@@ -146,22 +147,24 @@ abstract class CronJob
      * In the deliciousbrains version we can check if the background process
      * is active. In the a5shleyrich version we just assume it is not.
      *
-     * @param \WP_Background_Process $bgProcess An instance of
+     * @param BgProcessInterface $bgProcess An instance of
      *      \WP_Background_Process from either the deliciousbrains or
      *      a5shleyrich packages.
      *
      * @return bool True if the job is active, false otherwise.
      */
-    protected static function isJobActive(\WP_Background_Process $bgProcess): bool
+    protected static function isJobActive(BgProcessInterface $bgProcess): bool
     {
         $isJobActive = false;
 
-        // Does not exist in the a5shleyrich version
-        if (method_exists($bgProcess, 'is_active')) { // @phpstan-ignore function.alreadyNarrowedType
-            $isJobActive = $bgProcess->is_active();
-        } elseif (method_exists($bgProcess, 'is_process_running')) {
-            $method = new \ReflectionMethod($bgProcess, 'is_process_running');
-            $isJobActive = $method->invoke($bgProcess);
+        if ($bgProcess instanceof \WP_Background_Process) {
+            // Does not exist in the a5shleyrich version
+            if (method_exists($bgProcess, 'is_active')) { // @phpstan-ignore function.alreadyNarrowedType
+                $isJobActive = $bgProcess->is_active();
+            } elseif (method_exists($bgProcess, 'is_process_running')) {
+                $method = new \ReflectionMethod($bgProcess, 'is_process_running');
+                $isJobActive = $method->invoke($bgProcess);
+            }
         }
 
         return $isJobActive;

@@ -4,6 +4,7 @@ namespace RCS\WP\Settings;
 
 use Psr\Log\LoggerInterface;
 use RCS\Traits\SingletonTrait;
+use RCS\WP\PluginInfoInterface;
 
 abstract class AdminSettings
 {
@@ -13,21 +14,26 @@ abstract class AdminSettings
     private array $tabs = array();
 
     /**
-     * Initialize the class and set its properties.
      *
-     * @param      string    $pluginName       The name of this plugin.
-     * @param      string    $version    The version of this plugin.
+     * @param PluginInfoInterface $pluginInfo
+     * @param AdminSettingsTab[] $tabs
+     * @param string $optionsPageTitle
+     * @param string $optionsPageSlug
+     * @param string $optionsMenuTitle
+     * @param LoggerInterface $logger
      */
     protected function __construct(
-        protected string $pluginName,
-        protected string $version,
-        protected string $pluginUrl,
+        protected PluginInfoInterface $pluginInfo,
+        array $tabs,
         protected string $optionsPageTitle,
         protected string $optionsPageSlug,
         protected string $optionsMenuTitle,
         protected LoggerInterface $logger
         )
     {
+        foreach($tabs as $tab) {
+            $this->registerTab($tab);
+        }
     }
 
     protected function initializeInstance(): void
@@ -85,7 +91,7 @@ abstract class AdminSettings
     {
         $activeTab = $this->getActiveTab();
 
-        $activeTab->onEnqueueScripts($this->pluginName, $this->pluginUrl, $this->version);
+        $activeTab->onEnqueueScripts($this->pluginInfo->getSlug(), $this->pluginInfo->getUrl(), $this->pluginInfo->getVersion());
     }
 
     private function getActiveTab(): AdminSettingsTab
@@ -120,7 +126,7 @@ abstract class AdminSettings
     public function localSanitize(array $input): void
     {
         $activeTab = $this->getActiveTab();
-        $activeTab->sanitize($this->pluginName, $input);
+        $activeTab->sanitize($this->pluginInfo->getSlug(), $input);
     }
 
     final public function registerTab(AdminSettingsTab $tab): void

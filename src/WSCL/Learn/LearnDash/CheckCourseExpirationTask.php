@@ -3,13 +3,13 @@ declare(strict_types = 1);
 namespace WSCL\Learn\LearnDash;
 
 use Soundasleep\Html2Text;
-use RCS\WP\BgProcess\BgProcess;
-use RCS\WP\BgProcess\BgTask;
 use RCS\WP\WpMail\WpMailWrapper;
-use WSCL\Learn\WsclLearnPluginOptions;
+use WSCL\Learn\WsclLearnOptionsInterface;
 use Psr\Log\LoggerInterface;
+use RCS\WP\BgProcess\BgTaskInterface;
+use RCS\WP\BgProcess\BgProcessInterface;
 
-class CheckCourseExpirationTask extends BgTask
+class CheckCourseExpirationTask implements BgTaskInterface
 {
     private const THREE_YEARS = 3 * YEAR_IN_SECONDS;
 
@@ -42,14 +42,17 @@ class CheckCourseExpirationTask extends BgTask
     /**
      *
      * {@inheritDoc}
-     * @see \RCS\WP\BgProcess\BgTask::run()
+     * @see \RCS\WP\BgProcess\BgTaskInterface::run()
      */
-    public function run(BgProcess $bgProcess, LoggerInterface $logger) : bool
+    public function run(BgProcessInterface $bgProcess, LoggerInterface $logger, ...$params) : bool
     {
         $coursesDue = $this->getCoursesDue($logger);
 
         if (!empty($coursesDue)) {
-            $this->sendEmailNotification($this->wpUserId, $coursesDue, $logger);
+            /** @var WsclLearnOptionsInterface */
+            $options = array_shift($params);
+
+            $this->sendEmailNotification($this->wpUserId, $coursesDue, $options, $logger);
         }
 
         return true;
@@ -117,12 +120,15 @@ class CheckCourseExpirationTask extends BgTask
      * @param int $wpUserId
      * @param int[] $coursesDue
      */
-    private function sendEmailNotification(int $wpUserId, array $coursesDue, LoggerInterface $logger): void
+    private function sendEmailNotification(
+        int $wpUserId,
+        array $coursesDue,
+        WsclLearnOptionsInterface $options,
+        LoggerInterface $logger
+        ): void
     {
         $coursesDue = array_map(fn($postId) => \get_post($postId)->post_title, $coursesDue);
 
-        /** @var WsclLearnPluginOptions */
-        $options = WsclLearnPluginOptions::init();
         $wpUser = get_userdata($wpUserId);
 
         $courseList = '<ul>' . join('', array_map(fn($course) => '<li>'.$course.'</li>', $coursesDue)) . '</ul>';

@@ -4,7 +4,7 @@ namespace WSCL\Learn\LearnDash;
 
 use Psr\Log\LoggerInterface;
 use RCS\WP\CronJob;
-use RCS\WP\BgProcess\BgProcess;
+use RCS\WP\BgProcess\BgProcessInterface;
 
 class LearnDashCronJob extends CronJob
 {
@@ -12,11 +12,11 @@ class LearnDashCronJob extends CronJob
 
     /**
      *
-     * @param BgProcess $bgProcess
+     * @param BgProcessInterface $bgProcess
      * @param LoggerInterface $logger
      */
     protected function __construct(
-        private BgProcess $bgProcess,
+        private BgProcessInterface $bgProcess,
         LoggerInterface $logger
         )
     {
@@ -27,7 +27,6 @@ class LearnDashCronJob extends CronJob
     {
         $this->initializeCronJob(self::CRON_JOB_HOOK, 'daily');
     }
-
 
     /**
      *
@@ -52,7 +51,7 @@ class LearnDashCronJob extends CronJob
                 }
 
                 foreach (array_unique($wpUserIds) as $wpUserId) {
-                    $this->bgProcess->addTask(new CheckCourseExpirationTask(intval($wpUserId), $courseIds));
+                    $this->bgProcess->pushToQueue(new CheckCourseExpirationTask(intval($wpUserId), $courseIds));
                 }
 
                 $this->bgProcess->save();

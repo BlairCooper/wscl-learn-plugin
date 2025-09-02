@@ -14,13 +14,13 @@ class GeneralOptionsTab extends AdminSettingsTab
 
     /** @var array<string, string> */
     private static $fieldNameMap = array (
-        WsclLearnPluginOptions::SITE_EMAIL_NAME_KEY => 'Site Name',
-        WsclLearnPluginOptions::SITE_EMAIL_ADDRESS_KEY => 'General Email Address',
+        WsclLearnOptions::SITE_EMAIL_NAME_KEY => 'Site Name',
+        WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY => 'General Email Address',
     );
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, WsclLearnOptionsInterface $options)
     {
-        parent::__construct(self::TAB_NAME, WsclLearnPluginOptions::init(), $logger);
+        parent::__construct(self::TAB_NAME, $options, $logger);
     }
 
     public function addSettings(string $pageSlug): void
@@ -36,12 +36,12 @@ class GeneralOptionsTab extends AdminSettingsTab
             );
 
         add_settings_field(
-            WsclLearnPluginOptions::SITE_EMAIL_NAME_KEY,
-            self::$fieldNameMap[WsclLearnPluginOptions::SITE_EMAIL_NAME_KEY],    // field Title
+            WsclLearnOptions::SITE_EMAIL_NAME_KEY,
+            self::$fieldNameMap[WsclLearnOptions::SITE_EMAIL_NAME_KEY],    // field Title
             function () {
                 $this->renderTextField(
-                    $this->options,
-                    WsclLearnPluginOptions::SITE_EMAIL_NAME_KEY,
+                    $this->getFormFieldInfo(WsclLearnOptions::SITE_EMAIL_NAME_KEY),
+                    WsclLearnOptions::SITE_EMAIL_NAME_KEY,
                     'The name of the site to use in email messages',
                     []
                     );
@@ -51,12 +51,12 @@ class GeneralOptionsTab extends AdminSettingsTab
             );
 
         add_settings_field(
-            WsclLearnPluginOptions::SITE_EMAIL_ADDRESS_KEY,
-            self::$fieldNameMap[WsclLearnPluginOptions::SITE_EMAIL_ADDRESS_KEY],    // field Title
+            WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY,
+            self::$fieldNameMap[WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY],    // field Title
             function () {
                 $this->renderEmailField(
-                    $this->options,
-                    WsclLearnPluginOptions::SITE_EMAIL_ADDRESS_KEY,
+                    $this->getFormFieldInfo(WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY),
+                    WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY,
                     'Email address to use for messages sent from the web site (e.g. info@washingtonleague.org)',
                     );
             },  // Callback
@@ -79,11 +79,11 @@ class GeneralOptionsTab extends AdminSettingsTab
 
             foreach ($input as $key => $value) {
                 switch ($key) {
-                    case WsclLearnPluginOptions::SITE_EMAIL_NAME_KEY:
+                    case WsclLearnOptions::SITE_EMAIL_NAME_KEY:
                         $this->validateStringValue($key, $value, $pageSlug, self::$fieldNameMap[$key]);
                         break;
 
-                    case WsclLearnPluginOptions::SITE_EMAIL_ADDRESS_KEY:
+                    case WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY:
                         $this->validateEmailAddress($key, $value, $pageSlug, self::$fieldNameMap[$key]);
                         break;
                     default:

@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
  * running of each task such as when the task makes calls to an API.
  */
 
-class BgProcess extends \WP_Background_Process
+class BgProcess extends \WP_Background_Process implements BgProcessInterface
 {
     private const ACTION_NAME = 'BaseBgProcess';
 
@@ -24,27 +24,35 @@ class BgProcess extends \WP_Background_Process
     protected $prefix = 'rcs';
     protected $action = self::ACTION_NAME;
 
+    /** @var array<mixed> */
+    protected array $taskParams;
+
     /**
      * Initialize the instance.
      *
      * @param LoggerInterface $logger A logger to be used by the background
      *      process and any tasks executed by the process.
+     * @param array<mixed> $params A set of parameters that will be provided to each
+     *      task when it is run.
      */
     public function __construct(
-        protected LoggerInterface $logger
+        protected LoggerInterface $logger,
+        ...$params
         )
     {
         parent::__construct();
+
+        $this->taskParams = $params;
     }
 
     /**
      * Add a task to the queue
      *
-     * @param BgTask $task
+     * @param BgTaskInterface $task
      *
-     * @return $this
+     * @return self
      */
-    public function addTask(BgTask $task): BgProcess
+    public function pushToQueue(BgTaskInterface $task): self
     {
         return parent::push_to_queue($task);
     }
@@ -55,7 +63,7 @@ class BgProcess extends \WP_Background_Process
      */
     public function push_to_queue($data): BgProcess
     {
-        _doing_it_wrong(__FUNCTION__, __('Don\'t call this function, call addTask() instead.', 'raincity'), '1.0');
+        _doing_it_wrong(__FUNCTION__, __('Don\'t call this function, call pushToQueue() instead.', 'raincity'), '1.0');
 
         return $this;
     }
@@ -76,7 +84,7 @@ class BgProcess extends \WP_Background_Process
     {
         $result = $task;
 
-        if ($task->run($this, $logger)) {
+        if ($task->run($this, $logger, ...$this->taskParams)) {
             $result = false;
         }
 

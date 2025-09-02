@@ -3,8 +3,9 @@ declare(strict_types=1);
 namespace RCS\WP;
 
 use RCS\Traits\SingletonTrait;
+use RCS\WP\Settings\FormFieldInfo;
 
-abstract class PluginOptions
+abstract class PluginOptions implements PluginOptionsInterface
 {
     private const DATABASE_VERSION = 'dbVersion';
 
@@ -85,22 +86,18 @@ abstract class PluginOptions
     }
 
     /**
-     * Returns an array of values for use in HTML/Settings forms.
-     *
-     * [0] => The key passed in for use as a field id
-     * [1] => '{optionName}[{key}]' for use as a field name
-     * [2] => The field value
+     * Returns the information for use in HTML/Settings forms.
      *
      * @param string $key The option to retrieve the information for.$this
      *
-     * @return array<string>|NULL The array of values or null if the key is invalid.
+     * @return FormFieldInfo|NULL A FormFieldInfo object or null if the key is invalid.
      */
-    public function getFormFieldInfo(string $key): ?array
+    public function getFormFieldInfoX(string $key): ?FormFieldInfo
     {
         $result = null;
 
         if ($this->isValidKey($key)) {
-            $result = array(
+            $result = new FormFieldInfo(
                 $key,
                 sprintf("%s[%s]", $this->optionName, $key),
                 $this->values[$key] ?? ''
@@ -110,7 +107,7 @@ abstract class PluginOptions
         return $result;
     }
 
-    private function isValidKey(string $key): bool
+    public function isValidKey(string $key): bool
     {
         return in_array($key, $this->optionKeys);
     }

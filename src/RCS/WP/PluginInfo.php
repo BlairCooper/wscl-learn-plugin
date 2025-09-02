@@ -2,9 +2,6 @@
 declare(strict_types=1);
 namespace RCS\WP;
 
-use RCS\Traits\SingletonTrait;
-
-
 class PluginInfo implements PluginInfoInterface
 {
     private string $entryPointFile; // The fully qualified file name of the plugin entry point
@@ -15,18 +12,14 @@ class PluginInfo implements PluginInfoInterface
     private string $name;           // The name of the the plugin, e.g. "My Test Plugin"
     private string $writeDir;       // The name of the folder where the plugin can write files
 
-    use SingletonTrait;
     /**
      *
      * @param string $entryPointFile    The fully qualified file name of the plugin entry point
      */
-    protected function __construct(string $entryPointFile)
+    public function __construct(string $entryPointFile)
     {
         $this->entryPointFile = $entryPointFile;
-    }
 
-    protected function initializeInstance(): void
-    {
         if (!function_exists('get_plugin_data')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';  // @phpstan-ignore requireOnce.fileNotFound
         }

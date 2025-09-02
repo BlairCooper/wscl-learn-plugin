@@ -2,12 +2,12 @@
 declare(strict_types = 1);
 namespace WSCL\Learn\Shortcodes;
 
-use RCS\WP\PluginInfo;
 use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\PluginInfoInterface;
 
 class InsertJotFormShortcode extends ShortcodeBase
 {
-    protected function __construct(PluginInfo $pluginInfo)
+    public function __construct(PluginInfoInterface $pluginInfo)
     {
         parent::__construct($pluginInfo, 'wscl-jotform');
     }

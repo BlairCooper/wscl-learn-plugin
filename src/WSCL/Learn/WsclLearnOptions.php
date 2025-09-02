@@ -4,7 +4,7 @@ namespace WSCL\Learn;
 
 use RCS\WP\PluginOptions;
 
-class WsclLearnPluginOptions extends PluginOptions
+class WsclLearnOptions extends PluginOptions implements WsclLearnOptionsInterface
 {
     public const OPTION_NAME = 'wscl_learn_site_options';
 
