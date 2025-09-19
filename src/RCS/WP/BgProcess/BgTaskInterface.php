@@ -20,5 +20,18 @@ interface BgTaskInterface
      *
      * @return bool Returns true if the task is complete. Otherwise returns false.
      */
-    public function run(BgProcessInterface $bgProcess, LoggerInterface $logger, ...$params) : bool;
+//     public function run(BgProcessInterface $bgProcess, LoggerInterface $logger, ...$params) : bool;
+
+    /**
+     * Run the task.
+     *
+     * @param BgProcess $bgProcess The background process instance. Useful
+     *      when additional tasks need to be added to the queue.
+     * @param LoggerInterface $logger
+     * @param array<string, mixed> $params The array of parameters provided to the
+     *      background process when it was created.
+     *
+     * @return bool Returns true if the task is complete. Otherwise returns false.
+     */
+    public function run(BgProcessInterface $bgProcess, LoggerInterface $logger, array $params) : bool;
 }

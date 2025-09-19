@@ -15,16 +15,13 @@ class LearnDashCronJob extends CronJob
      * @param BgProcessInterface $bgProcess
      * @param LoggerInterface $logger
      */
-    protected function __construct(
+    public function __construct(
         private BgProcessInterface $bgProcess,
         LoggerInterface $logger
         )
     {
         parent::__construct($logger);
-    }
 
-    protected function initializeInstance(): void
-    {
         $this->initializeCronJob(self::CRON_JOB_HOOK, 'daily');
     }
 

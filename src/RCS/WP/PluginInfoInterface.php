@@ -12,6 +12,14 @@ interface PluginInfoInterface
     public function getEntryPointFile(): string;
 
     /**
+     * Fetch the file name of the plugin entry point relative to the
+     * "plugins" folder.
+     *
+     * @return string
+     */
+    public function getFile(): string;
+
+    /**
      * Fetch the file system path to the plugin folder.
      *
      * @return string

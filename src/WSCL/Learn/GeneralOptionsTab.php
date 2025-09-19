@@ -40,7 +40,6 @@ class GeneralOptionsTab extends AdminSettingsTab
             self::$fieldNameMap[WsclLearnOptions::SITE_EMAIL_NAME_KEY],    // field Title
             function () {
                 $this->renderTextField(
-                    $this->getFormFieldInfo(WsclLearnOptions::SITE_EMAIL_NAME_KEY),
                     WsclLearnOptions::SITE_EMAIL_NAME_KEY,
                     'The name of the site to use in email messages',
                     []
@@ -55,7 +54,6 @@ class GeneralOptionsTab extends AdminSettingsTab
             self::$fieldNameMap[WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY],    // field Title
             function () {
                 $this->renderEmailField(
-                    $this->getFormFieldInfo(WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY),
                     WsclLearnOptions::SITE_EMAIL_ADDRESS_KEY,
                     'Email address to use for messages sent from the web site (e.g. info@washingtonleague.org)',
                     );

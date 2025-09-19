@@ -34,9 +34,9 @@ class PluginInfo implements PluginInfoInterface
         $this->name = $pluginData['Name'];
 
         if (function_exists('wp_upload_dir')) {
-            $this->writeDir = \wp_upload_dir()['basedir'] . DIRECTORY_SEPARATOR . $this->slug . DIRECTORY_SEPARATOR;
+            $this->writeDir = \wp_upload_dir()['basedir'] . '/' . $this->slug . '/';
         } else {
-            $this->writeDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR;
+            $this->writeDir = sys_get_temp_dir() . '/';
         }
     }
 
@@ -57,6 +57,16 @@ class PluginInfo implements PluginInfoInterface
     public function getEntryPointFile(): string
     {
         return $this->entryPointFile;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\PluginInfoInterface::getFile()
+     */
+    public function getFile(): string
+    {
+        return plugin_basename($this->entryPointFile);
     }
 
     /**

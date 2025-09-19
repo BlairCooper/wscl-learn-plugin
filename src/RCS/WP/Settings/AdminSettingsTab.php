@@ -156,18 +156,18 @@ abstract class AdminSettingsTab
      *   size: 64<br>
      *   maxlength: 255
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param array<string, mixed> $attrs Optional: Additional attributes to be added to the input element.
      */
     protected function renderTextField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         array $attrs = array()
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             array(
@@ -197,18 +197,18 @@ abstract class AdminSettingsTab
      *   size: 64<br>
      *   maxlength: 255
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param array<string, mixed> $attrs Optional: Additional attributes to be added to the input element.
      */
     protected function renderPasswordField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         array $attrs = array()
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             array(
@@ -234,18 +234,18 @@ abstract class AdminSettingsTab
     /**
      * Render a Checkbox field
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param array<string, mixed> $attrs Optional: Additional attributes to be added to the input element.
      */
     protected function renderCheckboxField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         array $attrs = array()
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             [],
@@ -283,7 +283,6 @@ abstract class AdminSettingsTab
     /**
      * Render a matrix/set of Checkbox fields
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param CheckboxMatrixEntry[] $matrixEntries The options to display in the matrix. @see CheckboxMatrixEntry
@@ -291,13 +290,14 @@ abstract class AdminSettingsTab
      * @param bool          $showSelectAll Optional: Whether to include an option to select/clear all of the options.
      */
     protected function renderCheckboxMatrixField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         array $matrixEntries = array(),
         array $attrs = array(),
         bool $showSelectAll = false): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             [],
@@ -364,18 +364,18 @@ abstract class AdminSettingsTab
      *   size: 10<br>
      *   maxlength: 10
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param array<string, mixed>  $attrs Optional: Additional attributes to be added to the input element.
      */
     protected function renderNumberField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         array $attrs = array()
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             array(
@@ -402,18 +402,18 @@ abstract class AdminSettingsTab
     /**
      * Render an RTE text field.
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param int           $rows Number of rows for the text area.
      */
     protected function renderRteTextField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         int $rows = 10
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         wp_editor(
             $fieldInfo->fieldValue ?? '',
             $fieldInfo->fieldId,
@@ -434,20 +434,20 @@ abstract class AdminSettingsTab
      *   size: 40 (80 if $allowMultiple is true)<br>
      *   maxlength: 64 (100 if $allowMultiple is true)
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param bool          $allowMultiple Optional: Whether to allow multiple addresses. Defaults to false.
      * @param array<string, mixed>  $attrs Optional: Additional attributes to be added to the input element.
      */
     protected function renderEmailField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         bool $allowMultiple = false,
         array $attrs = array()
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             array(
@@ -481,18 +481,18 @@ abstract class AdminSettingsTab
      *   size: 90<br>
      *   maxlength: 128
      *
-     * @param FormFieldInfo $fieldInfo
      * @param string        $optionName Name of the option field being rendered.
      * @param string        $description Optional: A description for the field.
      * @param array<string, mixed>  $attrs Optional: Additional attributes to be added to the input element.
      */
     protected function renderUrlField(
-        FormFieldInfo $fieldInfo,
         string $optionName,
         string $description = '',
         array $attrs = array()
         ): void
     {
+        $fieldInfo = $this->getFormFieldInfo($optionName);
+
         $attrs = array_merge (
             // these attributes can be overwritten
             array(

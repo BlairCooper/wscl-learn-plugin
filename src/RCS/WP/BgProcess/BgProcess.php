@@ -32,12 +32,13 @@ class BgProcess extends \WP_Background_Process implements BgProcessInterface
      *
      * @param LoggerInterface $logger A logger to be used by the background
      *      process and any tasks executed by the process.
-     * @param array<mixed> $params A set of parameters that will be provided to each
+     * @param array<string, mixed> $params A set of parameters that will be provided to each
      *      task when it is run.
      */
     public function __construct(
         protected LoggerInterface $logger,
-        ...$params
+        array $params = []
+//         ...$params
         )
     {
         parent::__construct();
@@ -59,7 +60,7 @@ class BgProcess extends \WP_Background_Process implements BgProcessInterface
 
     /**
      * {@inheritDoc}
-     * @see WP_Background_Process::push_to_queue()
+     * @see \WP_Background_Process::push_to_queue()
      */
     public function push_to_queue($data): BgProcess
     {
@@ -74,17 +75,18 @@ class BgProcess extends \WP_Background_Process implements BgProcessInterface
      * If necessary, this would be the method to overload in a derived class
      * to wrap the running of a task with additional code such as throttling.
      *
-     * @param BgTask $task The background task to be run.
+     * @param BgTaskInterface $task The background task to be run.
      * @param LoggerInterface $logger
      *
-     * @return bool|BgTask Returns false if the task is complete, otherwise
+     * @return bool|BgTaskInterface Returns false if the task is complete, otherwise
      *      the task is returned.
      */
-    protected function runTask(BgTask $task, LoggerInterface $logger): BgTask|bool
+    protected function runTask(BgTaskInterface $task, LoggerInterface $logger): BgTaskInterface|bool
     {
         $result = $task;
 
-        if ($task->run($this, $logger, ...$this->taskParams)) {
+//         if ($task->run($this, $logger, ...$this->taskParams)) {
+        if ($task->run($this, $logger, $this->taskParams)) {
             $result = false;
         }
 
@@ -106,11 +108,11 @@ class BgProcess extends \WP_Background_Process implements BgProcessInterface
     /**
      *
      * {@inheritDoc}
-     * @see WP_Background_Process::task()
+     * @see \WP_Background_Process::task()
      */
     final protected function task($item)
     {
-        if ($item instanceof BgTask) {
+        if ($item instanceof BgTaskInterface) {
             $result = $this->runTask($item, $this->logger);
         } else {
             $result = false;

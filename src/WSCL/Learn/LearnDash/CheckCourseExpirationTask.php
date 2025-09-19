@@ -44,13 +44,13 @@ class CheckCourseExpirationTask implements BgTaskInterface
      * {@inheritDoc}
      * @see \RCS\WP\BgProcess\BgTaskInterface::run()
      */
-    public function run(BgProcessInterface $bgProcess, LoggerInterface $logger, ...$params) : bool
+    public function run(BgProcessInterface $bgProcess, LoggerInterface $logger, array $params) : bool
     {
         $coursesDue = $this->getCoursesDue($logger);
 
         if (!empty($coursesDue)) {
             /** @var WsclLearnOptionsInterface */
-            $options = array_shift($params);
+            $options = $params[WsclLearnOptionsInterface::class];
 
             $this->sendEmailNotification($this->wpUserId, $coursesDue, $options, $logger);
         }

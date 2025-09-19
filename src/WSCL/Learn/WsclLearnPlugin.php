@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace WSCL\Learn;
 
 use RCS\Logging\ErrorLogInterceptor;
+use RCS\WP\Database\DatabaseUpdater;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
 use DI\ContainerBuilder;
 
@@ -34,6 +35,10 @@ class WsclLearnPlugin
                     E_USER_NOTICE => ['_load_textdomain_just_in_time']
                     ]
                 );
+
+                /** @var DatabaseUpdater */
+                $dbUpdater = $container->get(DatabaseUpdater::class);
+                $dbUpdater->privUpgradeDatabase();
 
                 $container->get(LearnDashCronJob::class);
                 $container->get(ServiceConfig::SHORTCODES);

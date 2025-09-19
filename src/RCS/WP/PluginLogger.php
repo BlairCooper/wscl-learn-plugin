@@ -9,7 +9,6 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Log\LoggerInterface;
-use RCS\Traits\SingletonTrait;
 
 class PluginLogger implements LoggerInterface
 {

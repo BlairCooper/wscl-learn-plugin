@@ -37,12 +37,4 @@ class WsclLearnAdminSettings extends AdminSettings
 
         $this->initializeInstance();
     }
-
-//     protected function initializeInstance(): void
-//     {
-//         parent::initializeInstance();
-
-//         $this->registerTab(new GeneralOptionsTab($this->logger));
-//         $this->registerTab(new LearnDashSettingsTab($this->logger));
-//     }
 }

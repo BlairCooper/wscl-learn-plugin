@@ -141,5 +141,6 @@ abstract class PluginOptions implements PluginOptionsInterface
     public function setDatabaseVersion(string $dbVersion): void
     {
         $this->setValue(self::DATABASE_VERSION, $dbVersion);
+        $this->save();
     }
 }

@@ -8,8 +8,6 @@ use RCS\WP\PluginInfoInterface;
 
 abstract class AdminSettings
 {
-    use SingletonTrait;
-
     /** @var AdminSettingsTab[] */
     private array $tabs = array();
 
@@ -43,6 +41,8 @@ abstract class AdminSettings
 
             add_action('admin_init', [$this, 'addSettings']);
             add_action('admin_menu', [$this, 'addSettingsMenu']);
+
+            add_filter('plugin_action_links', [$this, 'addPluginActionLinks'], 10, 4);
         }
     }
 
@@ -199,4 +199,36 @@ abstract class AdminSettings
             print $html;
         }
     }
+
+    /**
+     * Hook for the 'plugin_action_links' filter.
+     *
+     * @param array<string> $actions    Array of plugin action links
+     * @param string        $pluginFile Path to the plugin file
+     * @param array<mixed>  $pluginData Array of plugin data
+     * @param string        $context    The plugin context
+     *
+     * @return array<string> A potentially updated array of plugin action links.
+     */
+    public function addPluginActionLinks(
+        array $actions,
+        string $pluginFile,
+        ?array $pluginData,
+        string $context
+        ): array
+    {
+        if ($pluginFile == $this->pluginInfo->getFile()) {
+            array_unshift(
+                $actions,
+                sprintf(
+                    '<a href="%s/wp-admin/options-general.php?page=%s">Settings</a>',
+                    get_bloginfo('wpurl'),
+                    $this->optionsPageSlug
+                    )
+                );
+        }
+
+        return $actions;
+    }
+
 }

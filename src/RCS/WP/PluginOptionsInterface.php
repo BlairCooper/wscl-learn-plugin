@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace RCS\WP;
 
-use RCS\WP\Settings\FormFieldInfo;
-
 interface PluginOptionsInterface
 {
     public function getOptionName(): string;

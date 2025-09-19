@@ -48,7 +48,6 @@ class LearnDashSettingsTab extends AdminSettingsTab
             self::$fieldNameMap[WsclLearnOptions::MSG_FROM_NAME_ID], // field Title
             function () {
                 $this->renderTextField(
-                    $this->getFormFieldInfo(WsclLearnOptions::MSG_FROM_NAME_ID),
                     WsclLearnOptions::MSG_FROM_NAME_ID,
                     'The name messages should appear from.',
                     array (
@@ -67,7 +66,6 @@ class LearnDashSettingsTab extends AdminSettingsTab
             self::$fieldNameMap[WsclLearnOptions::MSG_FROM_ADDRESS_ID], // field Title
             function () {
                 $this->renderEmailField(
-                    $this->getFormFieldInfo(WsclLearnOptions::MSG_FROM_ADDRESS_ID),
                     WsclLearnOptions::MSG_FROM_ADDRESS_ID,
                     'The email address messages should appear from.'
                     );
@@ -81,7 +79,6 @@ class LearnDashSettingsTab extends AdminSettingsTab
             self::$fieldNameMap[WsclLearnOptions::MSG_SUBJECT_ID], // field Title
             function () {
                 $this->renderTextField(
-                    $this->getFormFieldInfo(WsclLearnOptions::MSG_SUBJECT_ID),
                     WsclLearnOptions::MSG_SUBJECT_ID,
                     'Placeholders available in the body can also be used in the subject',
                     array (
@@ -115,7 +112,6 @@ class LearnDashSettingsTab extends AdminSettingsTab
             self::$fieldNameMap[WsclLearnOptions::MSG_BODY_ID], // field Title
             function () use ($fieldDescription) {
                 $this->renderRteTextField(
-                    $this->getFormFieldInfo(WsclLearnOptions::MSG_BODY_ID),
                     WsclLearnOptions::MSG_BODY_ID,
                     $fieldDescription
                     );

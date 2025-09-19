@@ -2,12 +2,10 @@
 declare(strict_types=1);
 namespace RCS\WP\Shortcodes;
 
-use RCS\Traits\SingletonTrait;
 use RCS\WP\PluginInfoInterface;
 
 abstract class ShortcodeBase implements ShortcodeImplInf
 {
-    use SingletonTrait;
     use ShortcodeImplTrait;
 
     protected function __construct(
@@ -15,6 +13,7 @@ abstract class ShortcodeBase implements ShortcodeImplInf
         protected string $shortcodeTag
         )
     {
+        $this->initializeInstance();
     }
 
     protected function initializeInstance(): void

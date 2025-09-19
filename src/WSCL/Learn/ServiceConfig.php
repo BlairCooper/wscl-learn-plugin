@@ -37,16 +37,14 @@ class ServiceConfig
             WsclLearnOptionsInterface::class => \DI\factory([WsclLearnOptions::class, 'init']),
             PluginOptionsInterface::class => \DI\get(WsclLearnOptionsInterface::class),
 
-            BgProcessInterface::class => function(LoggerInterface $logger, WsclLearnOptionsInterface $options) {
-                return new BgProcess($logger, $options);
-            },
+            BgProcessInterface::class => \DI\autowire(BgProcess::class)
+                ->constructor(params:
+                    [
+                        WsclLearnOptionsInterface::class => \DI\get(WsclLearnOptionsInterface::class)
+                    ]
+                    ),
 
-            LearnDashCronJob::class => function (ContainerInterface $container) {
-                return LearnDashCronJob::init(
-                    $container->get(BgProcessInterface::class),
-                    $container->get(LoggerInterface::class)
-                );
-            },
+            LearnDashCronJob::class => \DI\autowire(LearnDashCronJob::class),
 
             self::SETTINGS_TABS => [
                 \DI\autowire(GeneralOptionsTab::class),
