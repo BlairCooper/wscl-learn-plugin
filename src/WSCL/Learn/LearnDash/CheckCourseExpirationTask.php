@@ -2,12 +2,12 @@
 declare(strict_types = 1);
 namespace WSCL\Learn\LearnDash;
 
-use Soundasleep\Html2Text;
+use Html2Text\Html2Text;
+use Psr\Log\LoggerInterface;
+use RCS\WP\BgProcess\BgProcessInterface;
+use RCS\WP\BgProcess\BgTaskInterface;
 use RCS\WP\WpMail\WpMailWrapper;
 use WSCL\Learn\WsclLearnOptionsInterface;
-use Psr\Log\LoggerInterface;
-use RCS\WP\BgProcess\BgTaskInterface;
-use RCS\WP\BgProcess\BgProcessInterface;
 
 class CheckCourseExpirationTask implements BgTaskInterface
 {
@@ -152,13 +152,15 @@ class CheckCourseExpirationTask implements BgTaskInterface
 
         $htmlBody = "<html><body>{$body}</body></html>";
 
+        $textBody = (new Html2Text($htmlBody))->getText();
+
         (new WpMailWrapper($logger))
             ->setFrom($options->getMsgFromAddress(), $options->getMsgFromName())
             ->addTo($wpUser->user_email, $wpUser->first_name . ' ' . $wpUser->last_name)
             ->setSubject($subject)
             ->addBcc($options->getMsgFromAddress(), $options->getMsgFromName())
             ->setHtmlBody($htmlBody)
-            ->setPlainBody(Html2Text::convert($htmlBody))
+            ->setPlainBody($textBody)
             ->sendMessage();
     }
 }

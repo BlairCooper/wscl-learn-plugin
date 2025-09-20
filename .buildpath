@@ -21,6 +21,11 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
+	<buildpathentry kind="src" path="vendor/html2text/html2text/src">
+		<attributes>
+			<attribute name="composer" value="vendor"/>
+		</attributes>
+	</buildpathentry>
 	<buildpathentry kind="src" path="vendor/laravel/serializable-closure/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
@@ -187,11 +192,6 @@
 		</attributes>
 	</buildpathentry>
 	<buildpathentry kind="src" path="vendor/sebastian/version/src">
-		<attributes>
-			<attribute name="composer" value="vendor"/>
-		</attributes>
-	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/soundasleep/html2text/src">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
