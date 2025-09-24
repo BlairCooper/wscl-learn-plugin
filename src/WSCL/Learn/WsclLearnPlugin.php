@@ -2,10 +2,11 @@
 declare(strict_types=1);
 namespace WSCL\Learn;
 
+use DI\ContainerBuilder;
 use RCS\Logging\ErrorLogInterceptor;
+use RCS\WP\PluginInfo;
 use RCS\WP\Database\DatabaseUpdater;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
-use DI\ContainerBuilder;
 
 class WsclLearnPlugin
 {
@@ -24,7 +25,7 @@ class WsclLearnPlugin
                 $containerBuilder->addDefinitions(ServiceConfig::getDefinitions());
 
                 if (!file_exists(get_home_path() . 'wp-config-local.php')) {
-                    $containerBuilder->enableCompilation(self::getCompiledContainerPath());
+                    $containerBuilder->enableCompilation((new PluginInfo($entryPointFile))->getPath());
                 }
 
                 $container = $containerBuilder->build();
@@ -64,32 +65,5 @@ class WsclLearnPlugin
                 return $this->options->getSiteEmailName();
             }
         );
-
-        add_action(
-            'upgrader_process_complete',
-            function (object $upgrader_object, array $options) use ($entryPointFile) {
-                if ($options['action'] == 'update' &&
-                    $options['type'] == 'plugin' &&
-                    isset( $options['plugins'] ) &&
-                    in_array( plugin_basename( $entryPointFile ), $options['plugins']))
-                {
-                    $path = self::getCompiledContainerPath();
-
-                    if (file_exists($path)) {
-                        array_map('unlink', glob("$path/*.php"));
-                    }
-                }
-            },
-            10,
-            2
-        );
-    }
-
-    public static function getCompiledContainerPath(): string
-    {
-        $reflectionClass = new \ReflectionClass(self::class);
-        $shortName = $reflectionClass->getShortName();
-
-        return \wp_upload_dir()['basedir'] . DIRECTORY_SEPARATOR . 'CompiledContainers' . DIRECTORY_SEPARATOR . $shortName;
     }
 }

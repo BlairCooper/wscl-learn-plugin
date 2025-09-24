@@ -2,15 +2,14 @@
 declare(strict_types = 1);
 namespace WSCL\Learn;
 
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RCS\WP\Database\DatabaseUpdater;
 use RCS\WP\PluginInfo;
 use RCS\WP\PluginInfoInterface;
 use RCS\WP\PluginLogger;
 use RCS\WP\PluginOptionsInterface;
 use RCS\WP\BgProcess\BgProcess;
 use RCS\WP\BgProcess\BgProcessInterface;
+use RCS\WP\Database\DatabaseUpdater;
 use RCS\WP\Database\DatabaseUpdatesInterface;
 use WSCL\Learn\LearnDash\LearnDashCronJob;
 use WSCL\Learn\LearnDash\LearnDashSettingsTab;
