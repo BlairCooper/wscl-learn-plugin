@@ -4,6 +4,12 @@
 	"type" : "library",
 	"version" : "2.0.7",
 	"minimum-stability" : "stable",
+	"repositories" : [{
+			"type" : "git",
+			"url" : "https://github.com/RainCitySolutions/rcs-wp-library",
+			"name" : "rcs-wp-library"
+		}
+	],
 	"require" : {
 		"php" : ">=8.2",
 		"composer/installers" : "~2.3",
@@ -11,7 +17,8 @@
 		"psr/log" : "~3.0",
 		"monolog/monolog" : "~3.9",
 		"php-di/php-di" : "~7.1",
-		"html2text/html2text" : "~4.3"
+		"html2text/html2text" : "~4.3",
+		"raincity/rcs-wp-library" : "~1.0"
 	},
 	"require-dev" : {
 		"phpstan/phpstan" : "^2.1",
@@ -24,7 +31,7 @@
 			"src/"
 		],
 		"psr-4" : {
-			"" : "src"
+			"WSCL\\" : "src/WSCL"
 		}
 	},
 	"config" : {

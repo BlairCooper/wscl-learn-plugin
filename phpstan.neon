@@ -2,12 +2,9 @@ parameters:
     level: 6
     paths:
         - src
-        - src/RCS
         - ./entryPoint.php
     excludePaths:
         - vendor
-        - src/RCS/Cache
-        - src/RCS/PDF
     ignoreErrors:
         - identifier: class.notFound
 

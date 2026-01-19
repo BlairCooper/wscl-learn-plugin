@@ -9,8 +9,14 @@ class InsertJotFormShortcode extends ShortcodeBase
 {
     public function __construct(PluginInfoInterface $pluginInfo)
     {
-        parent::__construct($pluginInfo, 'wscl-jotform');
+        parent::__construct($pluginInfo, self::getTagName());
     }
+
+    public static function getTagName(): string
+    {
+        return 'wscl-jotform';
+    }
+
 
     /**
      *

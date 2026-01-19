@@ -18,7 +18,7 @@ class WsclLearnPlugin
             'init',
             function () use ($entryPointFile) {
                 if (!function_exists('get_home_path')) {
-                    require_once ABSPATH . 'wp-admin/includes/file.php';    // @phpstan-ignore requireOnce.fileNotFound
+                    require_once ABSPATH . 'wp-admin/includes/file.php';
                 }
 
                 $containerBuilder = new ContainerBuilder();
@@ -32,7 +32,7 @@ class WsclLearnPlugin
 
                 $container->set(ServiceConfig::PLUGIN_ENTRYPOINT, $entryPointFile);
 
-                ErrorLogInterceptor::init([
+                new ErrorLogInterceptor([                               // NOSONAR - not useless
                     E_USER_NOTICE => ['_load_textdomain_just_in_time']
                     ]
                 );
