@@ -58,7 +58,9 @@ class ServiceConfig
             ],
 
             DatabaseUpdatesInterface::class => \DI\autowire(DatabaseUpdates::class),
-            DatabaseUpdater::class => \DI\autowire()
+            DatabaseUpdater::class => \DI\autowire(),
+
+            SgSecurityHelper::class => \DI\autowire()
         ];
     }
 }

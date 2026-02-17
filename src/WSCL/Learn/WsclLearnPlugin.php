@@ -43,6 +43,7 @@ class WsclLearnPlugin
 
                 $container->get(LearnDashCronJob::class);
                 $container->get(ServiceConfig::SHORTCODES);
+                $container->get(SgSecurityHelper::class);
 
                 if (is_admin()) {
                     $container->get(WsclLearnAdminSettings::class);
