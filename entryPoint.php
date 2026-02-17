@@ -8,7 +8,7 @@ namespace WSCL\Learn;
  * @wordpress-plugin
  * Plugin Name:         WSCL Learn site Customizations
  * Description:         Plugin to support customizations for the learn.washingtonleague.org website.
- * Version:             2.0.8
+ * Version:             2.0.9
  * Requires at least:   6.8.0
  * Requires PHP:        8.2
  * Author:              Blair Cooper
