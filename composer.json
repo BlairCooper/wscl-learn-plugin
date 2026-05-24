@@ -15,7 +15,7 @@
 		"composer/installers" : "~2.3",
 		"deliciousbrains/wp-background-processing" : "~1.4",
 		"psr/log" : "~3.0",
-		"monolog/monolog" : "~3.9",
+		"monolog/monolog" : "~3.10",
 		"php-di/php-di" : "~7.1",
 		"html2text/html2text" : "~4.3",
 		"raincity/rcs-wp-library" : "~1.0"

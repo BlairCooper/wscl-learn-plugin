@@ -10,10 +10,11 @@ const
     entryPointFile      = 'entryPoint.php'
     ;
 
+const { exec } = require('node:child_process');
+
 const
     packageJson     = require('./package.json'),
     gulp            = require('gulp'),
-    composer        = require('gulp-composer'),
     fs              = require('fs'),
     path            = require('path'),
     rename          = require('gulp-rename'),
@@ -79,8 +80,12 @@ function updateEntryPointVersion() {
         ;
 }
 
-function runComposerTask() {
-    return composer({ "async": false, "self-install": false, "no-dev": true });
+function runComposerTask(cb) {
+    return exec('composer update --no-dev --optimize-autoloader', (err, stdout, stderr) => {
+        console.log(stdout);
+        console.error(stderr);
+        cb(err);
+     });
 }
 
 let zipContents = [
