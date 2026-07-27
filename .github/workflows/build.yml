@@ -1,4 +1,4 @@
-name: Build WSCL Learn site plugin
+name: Build plugin
 
 on:
   push:
@@ -10,11 +10,11 @@ jobs:
     steps:
       # Checkout our code 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Setup NodeJS environment
       - name: Setup Node.js environment
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: 'npm'
@@ -40,45 +40,7 @@ jobs:
       - name: Install NPM dependencies
         run: npm install
 
-      # Rev the version number for the next build
-      - name: Rev Version
-        id: rev-version
-        run: |
-          npm --no-git-tag-version version patch
-          echo "project_name=$(sed -n -e 's/.*"name": "\(.*\)",.*/\1/p' <<< cat package.json)" >> $GITHUB_OUTPUT
-          echo "project_version=$(sed -n -e 's/.*"version": "\(.*\)",.*/\1/p' <<< cat package.json)" >> $GITHUB_OUTPUT
-
       # build the app
       - name: Build
         run: |
           npm run build
-          mv ${{ steps.rev-version.outputs.project_name }}.zip ${{ steps.rev-version.outputs.project_name }}-${{ steps.rev-version.outputs.project_version }}.zip
-        
-      - name: Configure Git user
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-
-      # Save versioned files 
-      - name: Commit version files
-        id: commit-version
-        run: |
-          git add package.json package-lock.json composer.json composer.lock entryPoint.php
-          echo -n "Rev to version ${{ steps.rev-version.outputs.project_version }}" | git commit -F -
-          git push
-          echo "commit-ref=$(git show-ref --heads -s)" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      # CREATE GITHUB RELEASE AND ADD ASSETS
-      - name: Create GitHub release
-        id: create-release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: v${{ steps.rev-version.outputs.project_version }}
-          name: Release ${{ steps.rev-version.outputs.project_version }}
-          commit: ${{ steps.commit-version.outputs.commit-ref }}
-          omitBody: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts:
-            ${{ steps.rev-version.outputs.project_name }}-${{ steps.rev-version.outputs.project_version }}.zip
