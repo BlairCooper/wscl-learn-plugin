@@ -1887,11 +1887,11 @@
         },
         {
             "name": "raincity/rcs-wp-library",
-            "version": "1.0.26",
+            "version": "1.0.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RainCitySolutions/rcs-wp-library",
-                "reference": "4ca4a077f19a61badb2d9d8633bcd0a5114e98fa"
+                "reference": "0bda64a1c7536531d54c26a18366f51472a5c739"
             },
             "require": {
                 "composer/installers": "~2.3",
@@ -1936,7 +1936,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Library to support implementing WordPress plugins",
-            "time": "2026-08-21T22:59:53+00:00"
+            "time": "2026-08-21T23:53:41+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
